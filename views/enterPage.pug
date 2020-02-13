@@ -1,0 +1,44 @@
+extends layout
+
+append stylesheets
+  link(rel="stylesheet", href="/stylesheets/enterPage.css")
+block content
+  .topMenu.pt-3.pb-2
+    .container.clearfix
+      .btn.btn-sm.btn-slowLight.font-weight-normal.mt-1.text-75
+        span
+          i.fas.fa-phone-volume
+          |  Reserve by phone
+      .btn.btn-sm.font-weight-normal.text-white.mt-1
+        span.text-75
+          i.far.fa-envelope
+          |  info@findcourse.com
+      img.logo.float-right(src='/images/logo-eduvizyon.png')
+  .card.mx-auto.py-4.contentBox(style='')
+    span.text-center.font-weight-bold.mx-auto(style='color:#15365E; font-size: 1.1rem;')
+      | Apply to the best international universities and language schools now!
+    .mx-auto.py-2(style='color:rgb(21, 34, 94); font-weight: 300;')
+      | Are you looking for a language course or university degree?
+    ul.list-group.list-group-horizontal.mx-auto.mt-4
+      li.list-group-item.lowShadow-box.p-0.mx-1.Options
+        a.btn.p-0(href='#')
+          i.fas.fa-3x.fa-graduation-cap.mt-1
+          .mt-2 Search for language schools
+      li.list-group-item.lowShadow-box.p-0.mx-1.Options
+        a.btn.p-0(href='#')
+          i.fas.fa-3x.fa-graduation-cap.mt-1
+          .mt-2 Search for language schools
+    .mx-auto
+      ul.list-group.list-group-horizontal.mx-auto.mt-4
+        li.list-group-item.socialLinks.mx-2.border-0
+          a(href='#')
+            i.fab.fa-lg.fa-facebook-f
+        li.list-group-item.socialLinks.mx-2.border-0
+          a(href='#')
+            i.fab.fa-lg.fa-twitter
+        li.list-group-item.socialLinks.mx-2.border-0
+          a(href='#')
+            i.fab.fa-lg.fa-linkedin-in
+        li.list-group-item.socialLinks.mx-2.border-0
+          a(href='#')
+            i.fab.fa-lg.fa-instagram

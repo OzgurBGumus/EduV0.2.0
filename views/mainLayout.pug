@@ -1,0 +1,79 @@
+
+
+
+
+
+
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(http-equiv='X-UA-Compatible', content='ie=edge')
+    block stylesheets
+      link(href='https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css', rel='stylesheet', type='text/css')
+      link(rel='stylesheet', href='/stylesheets/mainTopMenu.css')
+      link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css', integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh', crossorigin='anonymous')
+    block headersScripts
+      script(src='https://kit.fontawesome.com/6bc33e778c.js', crossorigin='anonymous')
+      script(src='https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js')
+      script(src='https://code.jquery.com/jquery-3.4.1.slim.min.js', integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n', crossorigin='anonymous')
+      script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo', crossorigin='anonymous')
+      script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js', integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6', crossorigin='anonymous')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    title= title
+  body
+        img(src="images/bgMain2.jpg", alt="" style='z-index:-999999; position:fixed; width:100%')
+        div
+            ul.list-group.fixedSocials.position-fixed.p-0.text-center.p-1.medShadow-box
+                li.list-group-item.p-0.border-0.py-1
+                    a.fixed-SocialLink.btn.m-0.p-0.text-primary(href='#')
+                        <i class="fab fa-2x fa-facebook"></i>
+                li.list-group-item.p-0.border-0.py-1
+                    a.fixed-SocialLink.btn.m-0.p-0.text-info(href='#')
+                        <i class="fab fa-2x fa-twitter-square"></i>
+                li.list-group-item.p-0.border-0.py-1
+                    a.fixed-SocialLink.btn.m-0.p-0.text-danger(href='#')
+                        <i class="fab fa-2x fa-youtube"></i>
+                li.list-group-item.p-0.border-0.py-1
+                    a.fixed-SocialLink.btn.m-0.p-0.text-primary(href='#')
+                        <i class="fab fa-2x fa-linkedin"></i>
+                li.list-group-item.p-0.border-0.py-1
+                    a.fixed-SocialLink.btn.m-0.p-0.text-primary(href='#')
+                        <i class="fas fa-2x fa-envelope"></i>
+                li.list-group-item.p-0.border-0.py-1
+                    a.fixed-SocialLink.btn.m-0.p-0.text-info(href='#')
+                        <i class="fas fa-2x fa-share-alt"></i>
+            .header.mb-2
+                .container.px-0
+                    .topMenu1.py-2
+                        img.logo(src='/images/logo-eduvizyon.png')
+                        .btn.btn-sm.btn-slowLight.font-weight-normal.mt-1.text-75.float-right
+                            span.text-75
+                            |  Reserve by phone
+                            i.fas.fa-phone-volume.ml-1
+                        .btn.btn-sm.font-weight-normal.text-dark.mt-1.float-right.my-auto
+                            span.text-75
+                            |  info@Eduvizyon.com
+                            i.far.fa-envelope.ml-1
+                .topMenu2
+                    .container.px-2
+                        nav.navbar.navbar-expand-lg.px-1
+                            button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
+                                span.navbar-toggler-icon
+                            #navbarNav.collapse.navbar-collapse
+                                ul.navbar-nav.mr-auto
+                                    li.nav-item.px-2
+                                        a.nav-link.topMenu2Link.py-1.font-weight-bold(href='#')
+                                            | Language schools
+                                    li.nav-item.px-2
+                                        a.nav-link.topMenu2Link.py-1.font-weight-bold(href='#')
+                                            |  University admissions
+                                    li.nav-item.px-2
+                                        a.nav-link.topMenu2Link.py-1.font-weight-bold(href='#')
+                                            |  How to book a language course
+                                a.nav-link.topMenu2Link.py-1.font-weight-bold.btn-danger.text-white(href='#searchCoursePlace').px-5.py-0
+                                        span  Search Now!
+
+        div
+            block content

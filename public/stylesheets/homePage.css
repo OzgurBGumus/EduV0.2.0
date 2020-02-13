@@ -1,0 +1,72 @@
+
+.horizonal-Homepage-Schoolfilter{
+    list-style: none;
+}
+.horizonal-Homepage-Schoolfilter li{
+    float: left;
+    border: 1px solid rgba(0,0,0,.125)!important;
+    width: 20%;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.horizonal-Homepage-CourseCardList{
+    list-style: none;
+}
+.card-ListItem{
+    display: inline-block;
+    width: 30%;
+    height: 340px;
+    overflow: hidden;
+}
+.card-ListItem-Image{
+    height: 172px;
+}
+.homePage-CourseCard{
+    
+}
+.homepageCoursel{
+    height: 500px!important;
+}
+.homepageCoursel-imgbox{
+    height: 100%;
+}
+.homepageCoursel-img{
+    text-align: center;
+}
+.hotDiscountsContainer{
+    border: 1px solid rgba(0,0,0,.125)!important;
+    padding: 10px;
+}
+.hotDiscountsBox{
+}
+.cardDescription:first{
+    padding-top: 0px!important;
+}
+.warningSelectBox{
+    border: 2px solid #DC3545;
+    color: #DC3545!important;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+.reservationSideHeader{
+    
+    color: rgb(210,43,59)!important;
+}
+.reservationSideDescription{
+    
+    color: rgb(210,43,59)!important;
+}
+.reservationSideFooter{
+    
+    color: black!important;
+}
+.coursepageCoursel{
+    height:400px!important;
+    width: 750px!important;
+}
+.w-700{
+    width: 700px!important;
+}
+.schoolProgram{
+    
+}

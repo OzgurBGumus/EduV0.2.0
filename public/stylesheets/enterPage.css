@@ -1,0 +1,53 @@
+body {
+    padding: 0px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: orange;
+  }
+
+.topMenu{
+    background-color: #0000001c;
+    margin-bottom: 110px;
+}
+.btn-slowLight{
+    border: 1px solid #fff!important;
+    color: #fff!important;
+    padding-top: 4px!important;
+    padding-bottom: 4px!important;
+    padding-left:10px!important;
+    padding-right: 10px!important;
+    background-color: rgba(255,255,255,0.0827451)!important
+}
+.btn-slowLight:hover{
+    background-color: rgba(245,245,245,0.188235)!important
+}
+.text-75{
+    font-size: 0.75rem!important;
+}
+.logo{
+    height: 40px;
+}
+.contentBox{
+    width: 550px;
+    height: 300px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.lowShadow-box{
+    border: none!important;
+    box-shadow: 3px 4px 10px 8px rgba(227, 227, 227, 0.42);
+}
+.lowShadow-box:hover{
+    border: 1px solid rgba(0,0,0,.125)!important;
+    box-shadow: none;
+}
+.Options{
+    width: 120px;
+    height: 100px;
+}
+.contentBox .list-group-horizontal .list-group-item a div{
+    line-height: 1.1;
+    font-size: 0.7rem;
+}
+.socialLinks{
+    padding:0px!important;
+}

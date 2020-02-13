@@ -1,0 +1,180 @@
+extends mainLayout
+append stylesheets
+    link(rel="stylesheet", href="/stylesheets/homePage.css")
+
+block content
+    #carouselExampleInterval.carousel.slide(data-ride='carousel').container.mx-auto.homepageCoursel.mb-2
+        ol.carousel-indicators
+            li.active(data-target='#carouselExampleIndicators', data-slide-to='0')
+            li(data-target='#carouselExampleIndicators', data-slide-to='1')
+            li(data-target='#carouselExampleIndicators', data-slide-to='2')
+        .carousel-inner.homepageCoursel-imgbox
+            .carousel-item.active(data-interval='10000')
+                img.d-block.w-100(src='images/homePageCoursel-1.jpg', alt='...').homepageCoursel-img
+            .carousel-item(data-interval='2000')
+                img.d-block.w-100(src='images/homePageCoursel-2.jpg', alt='...').homepageCoursel-img
+            .carousel-item
+                img.d-block.w-100(src='images/homePageCoursel-3.jpg', alt='...').homepageCoursel-img
+        a.carousel-control-prev(href='#carouselExampleInterval', role='button', data-slide='prev')
+            span.carousel-control-prev-icon(aria-hidden='true')
+            span.sr-only Previous
+        a.carousel-control-next(href='#carouselExampleInterval', role='button', data-slide='next')
+            span.carousel-control-next-icon(aria-hidden='true')
+            span.sr-only Next
+    .container
+        .hotDiscountsContainer.p-3.bg-white.mb-5
+            h4.mt-2.mb-4.ml-3 Hot Discounts
+            .courseListBox.mx-5
+                a.btn.hotDiscountCard.p-2.border.d-inline-block.mx-2
+                    .card.border-0(style='width: 18rem;')
+                        .position-absolute(style='right:0px;')
+                            .position-relative.bg-danger.rounded-circle.text-white.text-center(style='border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px')
+                                span(style='position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;') %75,6
+                        img.card-img-top(src='images/homePage-Course2.jpg', alt='...')
+                        .card-body.pb-0
+                            h5.card-title University Of England
+                        ul.list-group.list-group-flush
+                            li.list-group-item(style='height:60px;').cardDescription Take english courses in the center of the world
+                            li.list-group-item.card-link.text-right
+                                span.font-weight.float-left <i class="far fa-clock"></i> 27 Weeks
+                                span.bg-danger.text-white.rounded.p-1.float-right(style='font-size:0.8rem') Newyork City, USA
+                a.btn.hotDiscountCard.p-2.border.d-inline-block.mx-2
+                    .card.border-0(style='width: 18rem;')
+                        .position-absolute(style='right:0px;')
+                            .position-relative.bg-danger.rounded-circle.text-white.text-center(style='border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px')
+                                span(style='position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;') %75,6
+                        img.card-img-top(src='images/homePage-Course2.jpg', alt='...')
+                        .card-body.pb-0
+                            h5.card-title University Of England
+                        ul.list-group.list-group-flush
+                            li.list-group-item(style='height:60px;').cardDescription Take english courses in the center of the world
+                            li.list-group-item.card-link.text-right
+                                span.font-weight.float-left <i class="far fa-clock"></i> 27 Weeks
+                                span.bg-danger.text-white.rounded.p-1.float-right(style='font-size:0.8rem') Newyork City, USA
+                a.btn.hotDiscountCard.p-2.border.d-inline-block.mx-2
+                    .card.border-0(style='width: 18rem;')
+                        .position-absolute(style='right:0px;')
+                            .position-relative.bg-danger.rounded-circle.text-white.text-center(style='border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px')
+                                span(style='position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;') %75,6
+                        img.card-img-top(src='images/homePage-Course2.jpg', alt='...')
+                        .card-body.pb-0
+                            h5.card-title University Of England
+                        ul.list-group.list-group-flush
+                            li.list-group-item(style='height:60px;').cardDescription Take english courses in the center of the world
+                            li.list-group-item.card-link.text-right
+                                span.font-weight.float-left <i class="far fa-clock"></i> 27 Weeks
+                                span.bg-danger.text-white.rounded.p-1.float-right(style='font-size:0.8rem') Newyork City, USA
+        #searchCoursePlace.searchCourseContainer.p-3.bg-white
+            h1.text-center Find Your Language School
+            span.text-center.font-weight-bold.text-center.d-block.mb-4 Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione optio soluta eius in, deserunt consequatur!
+            .p-1.mb-5
+                form
+                    .row
+                        .col
+                            select#inputState.form-control.warningSelectBox
+                                option(selected='') Studying Language
+                                option ...
+
+                        .col
+                            select#inputState.form-control.warningSelectBox
+                                option(selected='') All Countries
+                                option ...
+                        .col
+                            select#inputState.form-control.warningSelectBox
+                                option(selected='') Course Duration
+                                option ...
+                        .col
+                            select#inputState.form-control.warningSelectBox
+                                option(selected='') Need Accommodation?
+                                option ...
+
+                        .col.text-center
+                            button.btn.btn-danger(type='submit') Find Course
+            .courseListBox.mx-5
+                a.btn.hotDiscountCard.p-2.border.d-inline-block.mx-2.mb-4
+                    .card.border-0(style='width: 18rem;')
+                        .position-absolute(style='right:0px;')
+                            .position-relative.bg-danger.rounded-circle.text-white.text-center(style='border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px')
+                                span(style='position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;') %75,6
+                        img.card-img-top(src='images/homePage-Course2.jpg', alt='...')
+                        .card-body.pb-0
+                            h5.card-title University Of England
+                        ul.list-group.list-group-flush
+                            li.list-group-item(style='height:60px;').cardDescription Take english courses in the center of the world
+                            li.list-group-item.card-link.text-right
+                                span.font-weight.float-left <i class="far fa-clock"></i> 27 Weeks
+                                span.bg-danger.text-white.rounded.p-1.float-right(style='font-size:0.8rem') Newyork City, USA
+                a.btn.hotDiscountCard.p-2.border.d-inline-block.mx-2.mb-4
+                    .card.border-0(style='width: 18rem;')
+                        .position-absolute(style='right:0px;')
+                            .position-relative.bg-danger.rounded-circle.text-white.text-center(style='border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px')
+                                span(style='position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;') %75,6
+                        img.card-img-top(src='images/homePage-Course2.jpg', alt='...')
+                        .card-body.pb-0
+                            h5.card-title University Of England
+                        ul.list-group.list-group-flush
+                            li.list-group-item(style='height:60px;').cardDescription Take english courses in the center of the world
+                            li.list-group-item.card-link.text-right
+                                span.font-weight.float-left <i class="far fa-clock"></i> 27 Weeks
+                                span.bg-danger.text-white.rounded.p-1.float-right(style='font-size:0.8rem') Newyork City, USA
+                a.btn.hotDiscountCard.p-2.border.d-inline-block.mx-2.mb-4
+                    .card.border-0(style='width: 18rem;')
+                        .position-absolute(style='right:0px;')
+                            .position-relative.bg-danger.rounded-circle.text-white.text-center(style='border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px')
+                                span(style='position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;') %75,6
+                        img.card-img-top(src='images/homePage-Course2.jpg', alt='...')
+                        .card-body.pb-0
+                            h5.card-title University Of England
+                        ul.list-group.list-group-flush
+                            li.list-group-item(style='height:60px;').cardDescription Take english courses in the center of the world
+                            li.list-group-item.card-link.text-right
+                                span.font-weight.float-left <i class="far fa-clock"></i> 27 Weeks
+                                span.bg-danger.text-white.rounded.p-1.float-right(style='font-size:0.8rem') Newyork City, USA
+                a.btn.hotDiscountCard.p-2.border.d-inline-block.mx-2.mb-4
+                    .card.border-0(style='width: 18rem;')
+                        .position-absolute(style='right:0px;')
+                            .position-relative.bg-danger.rounded-circle.text-white.text-center(style='border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px')
+                                span(style='position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;') %75,6
+                        img.card-img-top(src='images/homePage-Course2.jpg', alt='...')
+                        .card-body.pb-0
+                            h5.card-title University Of England
+                        ul.list-group.list-group-flush
+                            li.list-group-item(style='height:60px;').cardDescription Take english courses in the center of the world
+                            li.list-group-item.card-link.text-right
+                                span.font-weight.float-left <i class="far fa-clock"></i> 27 Weeks
+                                span.bg-danger.text-white.rounded.p-1.float-right(style='font-size:0.8rem') Newyork City, USA
+                a.btn.hotDiscountCard.p-2.border.d-inline-block.mx-2.mb-4
+                    .card.border-0(style='width: 18rem;')
+                        .position-absolute(style='right:0px;')
+                            .position-relative.bg-danger.rounded-circle.text-white.text-center(style='border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px')
+                                span(style='position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;') %75,6
+                        img.card-img-top(src='images/homePage-Course2.jpg', alt='...')
+                        .card-body.pb-0
+                            h5.card-title University Of England
+                        ul.list-group.list-group-flush
+                            li.list-group-item(style='height:60px;').cardDescription Take english courses in the center of the world
+                            li.list-group-item.card-link.text-right
+                                span.font-weight.float-left <i class="far fa-clock"></i> 27 Weeks
+                                span.bg-danger.text-white.rounded.p-1.float-right(style='font-size:0.8rem') Newyork City, USA
+                a.btn.hotDiscountCard.p-2.border.d-inline-block.mx-2.mb-4
+                    .card.border-0(style='width: 18rem;')
+                        .position-absolute(style='right:0px;')
+                            .position-relative.bg-danger.rounded-circle.text-white.text-center(style='border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px')
+                                span(style='position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;') %75,6
+                        img.card-img-top(src='images/homePage-Course2.jpg', alt='...')
+                        .card-body.pb-0
+                            h5.card-title University Of England
+                        ul.list-group.list-group-flush
+                            li.list-group-item(style='height:60px;').cardDescription Take english courses in the center of the world
+                            li.list-group-item.card-link.text-right
+                                span.font-weight.float-left <i class="far fa-clock"></i> 27 Weeks
+                                span.bg-danger.text-white.rounded.p-1.float-right(style='font-size:0.8rem') Newyork City, USA
+                nav(aria-label='...')
+                    ul.pagination.justify-content-center
+                        li.page-item.disabled
+                            a.page-link(href='#', tabindex='-1') 1
+                        li.page-item
+                            a.page-link(href='#') 2
+                        li.page-item
+                            a.page-link(href='#') 3
+    include mainFooter
