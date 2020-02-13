@@ -1,7 +1,7 @@
-const express = require('express')
+const express = require('express');
 const router = express.Router();
 
-router.get('/', (req,res)=>{
-    res.render('coursePage',  { title: 'Course Page' });
+router.get('/', (req,res,next)=>{
+    res.render('coursePage',  { title: 'CoursePage' });
 });
 module.exports=router;
