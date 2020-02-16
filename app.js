@@ -14,7 +14,7 @@ const  courseRouter = require('./routes/course');
 const courseInfo = require('./routes/courseInfo');
 
 const  app = express();
-mongoose.connect('mongodb://test:test123@ds037597.mlab.com:37597/heroku_x2q4wjml', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(DB_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.connection.on('open', ()=>{
   console.log('---MongoDB: Connected...');
 });
