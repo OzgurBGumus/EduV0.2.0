@@ -70,3 +70,20 @@
 .schoolProgram{
     
 }
+.disabled{
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.2;
+}
+.center{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 30%;
+    height: 50%;
+}
+.spinner{
+    z-index: 9999;
+    display: none;
+}
