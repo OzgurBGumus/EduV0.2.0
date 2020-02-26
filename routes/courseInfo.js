@@ -14,7 +14,7 @@ router.get('/course/new', function(req,res,next){
         startDateYear: 2020,
         startDateMonth: 09,
         startDateDay: 01,
-        Week: 4,
+        duration: 4,
         Accommodation: true,
         Airport: true,
         HInsurance: true

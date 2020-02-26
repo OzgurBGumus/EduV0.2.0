@@ -10,11 +10,46 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/search/:language/:country/:duration/:accomodation', function(req, res, next) {
-  const {language, country, duration, accomodation} = req.params;
-  Course.find({'country': country}, (err, data)=>{
-    res.send(data);
-  });
+router.get('/search/:language/:country/:duration/:accommodation', function(req, res, next) {
+  const {language, country, duration, accommodation} = req.params;
+  console.log(req.params);
+  if(accommodation == 'Yes'){
+    if(duration == "ANY"){
+      Course.find({'country': country, 'language': language, 'accommodation': true}, (err, data)=>{
+        res.send(data);
+      });
+    }
+    else{
+      Course.find({'country': country, 'language': language, 'duration': duration, 'accommodation': true}, (err, data)=>{
+        res.send(data);
+      });
+    }
+  }
+  else if(accommodation == 'No'){
+    if(duration == "ANY"){
+      Course.find({'country': country, 'language': language, 'accommodation': false}, (err, data)=>{
+        res.send(data);
+      });
+    }
+    else{
+      Course.find({'country': country, 'language': language, 'duration': duration, 'accommodation': false}, (err, data)=>{
+        res.send(data);
+      });
+    }
+  }
+  else{
+    if(duration == "ANY"){
+      Course.find({'country': country, 'language': language}, (err, data)=>{
+        res.send(data);
+      });
+    }
+    else{
+      Course.find({'country': country, 'language': language, 'duration': duration}, (err, data)=>{
+        res.send(data);
+      });
+    }
+  }
+
 });
 
 

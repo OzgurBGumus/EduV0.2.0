@@ -10,7 +10,7 @@ const CourseSchema = new Schema({
     startDateYear: Number,
     startDteMonth: Number,
     startDateDay: Number,
-    Week: Number,
+    duration: Number,
     Accommodation: Boolean,
     Airport: Boolean,
     HInsurance: Boolean,

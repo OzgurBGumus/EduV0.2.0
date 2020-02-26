@@ -62,11 +62,17 @@ block content
                         .col
                             select#searchDuration.form-control.warningSelectBox
                                 option(selected='') Course Duration
-                                option Any
+                                option ANY
+                                option 2
+                                option 4
+                                option 6
+                                option 8
                         .col
                             select#searchAccommodation.form-control.warningSelectBox
                                 option(selected='') Need Accommodation?
+                                option ANY
                                 option Yes
+                                option No
 
                         .col.text-center
                             #FindButton.button.btn.btn-danger(type='submit') Find Course
