@@ -40,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'semantic')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/homepage', homepageRouter);
+//app.use('/homepage', homepageRouter);
 app.use('/coursePage', courseRouter);
 app.use('/', courseInfo);
 

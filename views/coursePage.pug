@@ -63,7 +63,8 @@ block content
         .d-inline-block.ml-5.mb-5
             .bg-white.pt-3
                 h2.px-2
-                    span.ml-1 Asa Collage
+                    span.ml-1
+                        | #{course.name}
                 #carouselExampleInterval.carousel.slide(data-ride='carousel').container.px-2.mx-auto.mb-4.coursepageCoursel.mb-2
                     ol.carousel-indicators
                         li.active(data-target='#carouselExampleIndicators', data-slide-to='0')
@@ -83,7 +84,15 @@ block content
                         span.carousel-control-next-icon(aria-hidden='true')
                         span.sr-only Next
                 div.ml-2.mb-2.pl-3.w-700.mb-4(style='font-size:0.8rem')
-                    .btn.btn-sm.p-0.btn-danger.mr-2.mb-0.h6(style='cursor:default; font-size:0.7rem;') USA, Newyork City
+                    .btn.btn-sm.p-0.btn-danger.mr-2.mb-0.h6(style='cursor:default; font-size:0.7rem;')
+                        if(course.country !="")
+                            | #{course.country}
+                        if(course.state != "")
+                            | , 
+                            | #{course.state}
+                        if(course.city !="")
+                            | , 
+                            | #{course.city}
                     | Lorem10    Lorem ipsum dolor sit amet.Lorem ipsum,  Ipsam ea, ipsa ducimus officia non repudiandae. Lorem ipsum dolor sit amet.
                     | Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat officia aperiam repellat inventore dignissimos esse et, consectetur, provident dolorum nemo itaque aliquam harum vitae? Ullam blanditiis minima eaque doloremque distinctio, tenetur, modi et hic delectus quasi asperiores ipsa in ratione.
                 .schoolProgramsSide
