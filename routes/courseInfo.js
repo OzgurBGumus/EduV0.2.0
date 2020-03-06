@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 //Models
-const Book = require('../models/Course');
+const School = require('../models/Course');
+const Program = require('../models/Program');
 /// FOR NOW ADD NEW COURSE WITH THIS JS
 
 router.get('/course/new', function(req,res,next){
-    const book = new Book({
+    const school = new School({
         courseId: 1,
         courseImg: '/images/homePage-Course5.png',
         name: 'School A',
@@ -20,7 +21,26 @@ router.get('/course/new', function(req,res,next){
         HInsurance: true
     });
 
-    book.save((err, data)=>{
+    school.save((err, data)=>{
+        if (err)
+            console.log(err);
+
+        res.json(data);
+    });
+});
+
+router.get('/program/new', function(req,res,next){
+    const program = new Program({
+        courseId: 1,
+        time: 'Morning',
+        hours: '20',
+        startDateYear: 2020,
+        startDteMonth: 7,
+        startDateDay: 1,
+        Price: '300'
+        });
+
+    program.save((err, data)=>{
         if (err)
             console.log(err);
 

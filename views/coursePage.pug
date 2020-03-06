@@ -27,7 +27,8 @@ block content
                                 .col
                                     span(style='font-size:0.7rem').font-weight-bold Course Start Date
                                     select#inputState.form-control.warningSelectBox
-                                        option(selected='') Select
+                                        option(selected='')
+                                            | #{selectedDate}
                                         option ...
                             .row.mb-3
                                 .col
@@ -96,10 +97,27 @@ block content
                     | Lorem10    Lorem ipsum dolor sit amet.Lorem ipsum,  Ipsam ea, ipsa ducimus officia non repudiandae. Lorem ipsum dolor sit amet.
                     | Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat officia aperiam repellat inventore dignissimos esse et, consectetur, provident dolorum nemo itaque aliquam harum vitae? Ullam blanditiis minima eaque doloremque distinctio, tenetur, modi et hic delectus quasi asperiores ipsa in ratione.
                 .schoolProgramsSide
-                    .schoolProgram.w-700.rounded.border.ml-3.p-3.mb-3(style='background-color:#F14F15; color:#E1F1A7')
-                        h4 Program 1
-                        .schoolProgramDescription(style='font-size:0.9rem')
-                            |Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat quia fugiat veritatis. Libero saepe a incidunt, quis nesciunt, omnis sapiente eum doloribus repellendus, placeat ipsa quas fugiat mollitia debitis tempore.
+                    -var tamp = 1;
+                    each val in programs
+                        .schoolProgram.w-700.rounded.border.ml-3.p-3.mb-3(style='background-color:#F14F15; color:#E1F1A7')
+                            h4 Program #{temp}
+                            .schoolProgramDescription(style='font-size:0.9rem')
+                                | Day-time: #{val.time}
+                                br
+                                | #{val.hours} Hours/Week
+                                br
+                                if val.startDateDay > 10
+                                    | #{val.startDateDay}.
+                                else
+                                    | 0#{val.startDateDay}.
+                                if val.startDteMonth > 10
+                                    | #{val.startDteMonth}.
+                                else
+                                    | 0#{val.startDteMonth}.
+                                | #{val.startDateYear}
+                                | this price's start date
+                                br
+                                | Price #{val.price}
                     .schoolProgram.w-700.rounded.border.ml-3.p-3.mb-3(style='background-color:#F14F15; color:#E1F1A7')
                         h4 Program 2
                         .schoolProgramDescription(style='font-size:0.9rem')
@@ -110,3 +128,5 @@ block content
                             |Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat quia fugiat veritatis. Libero saepe a incidunt, quis nesciunt, omnis sapiente eum doloribus repellendus, placeat ipsa quas fugiat mollitia debitis tempore.
                 h4.px-2 Where is the School?
                 iframe.px-2(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12090.255760412922!2d-73.9888741!3d40.7496197!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb19cbc299b6757f2!2sASA%20College%20-%20Manhattan%20Campus!5e0!3m2!1str!2sde!4v1581611459168!5m2!1str!2sde', width='100%', height='225', frameborder='0', style='border:0;', allowfullscreen='')
+    script.
+        
