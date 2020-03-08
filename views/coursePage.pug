@@ -24,39 +24,43 @@ block content
                                     span(style='font-size:0.7rem').font-weight-bold School Program
                                     select#inputSelectCourseProgram.form-control.warningSelectBox
                                         option(value='empty' hidden) Select.
-                                        each val in courseNameList
-                                            option(value=val) #{val}
                             .row.mb-3
                                 .col
                                     span(style='font-size:0.7rem').font-weight-bold Course Start Date
                                     select#inputSelectCourseDate.form-control.warningSelectBox
-                                        option(selected='')
-                                            | #{selectedDate}
+                                        if selectedDate
+                                            option(selected='')
+                                                | #{selectedDate}
+                                        else
+                                            option(value="empty" hidden) Select.
                                         option ...
                             .row.mb-3
                                 .col
                                     span(style='font-size:0.7rem').font-weight-bold Number Of Weeks
                                     select#inputSelectCourseWeek.form-control.warningSelectBox
-                                        option(selected='') Select
+                                        option(value="empty" hidden) Select.
                                         option ...
                             .row.mb-3
                                 .col
                                     span(style='font-size:0.7rem').font-weight-bold Accommodation
                                     select#inputSelectCourseAccommodation.form-control.warningSelectBox
-                                        option(selected='') I Don't need
+                                        option(value="empty" hidden) Select.
+                                        option I Don't need
                                         option ...
                             .row.mb-3
                                 .col
                                     span(style='font-size:0.7rem').font-weight-bold Airport Pickup
                                     select#inputSelectCourseAirportPickup.form-control.warningSelectBox
-                                        option(selected='') I Don't need
-                                        option ...
+                                        option(value="empty" hidden) Select.
+                                        option I Don't need
+                                        option I Need
                             .row.mb-3
                                 .col
                                     span(style='font-size:0.7rem').font-weight-bold Health Insurance
                                     select#inputSelectCourseHInsurance.form-control.warningSelectBox
-                                        option(selected='') I Don't need
-                                        option ...
+                                        option(value="empty" hidden) Select.
+                                        option I Don't need
+                                        option I Need
                     li.list-group-item.reservationSideFooter.font-weight-bold
                         span(style='font-size:0.9rem') Additional costs
                         .additionalCosts.mb-4

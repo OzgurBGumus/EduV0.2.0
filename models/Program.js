@@ -9,6 +9,9 @@ const ProgramSchema = new Schema({
     startDateYear: Number,
     startDateMonth: Number,
     startDateDay: Number,
+    finishDateYear : Number,
+    finishDateMonth : Number,
+    finishDateDay : Number,
     price: String,
     description: String
 });

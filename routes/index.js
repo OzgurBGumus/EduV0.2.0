@@ -12,86 +12,6 @@ router.get('/homepage', function(req, res, next) {
     res.render('homePage', { title: 'Expresss', Courses: data });
   });
 });
-router.get('/homepage/:language/:country/:duration/:accommodation', function(req, res, next) {
-  const {language, country, duration, accommodation} = req.params;
-  if(country == 'All Countries'){
-    if(accommodation == 'Yes'){
-      if(duration == "ANY"){
-        Course.find({'language': language, 'accommodation': true}, (err, data)=>{
-          res.send(data);
-        });
-      }
-      else{
-        Course.find({'language': language, 'duration': duration, 'accommodation': true}, (err, data)=>{
-          res.send(data);
-        });
-      }
-    }
-    else if(accommodation == 'No'){
-      if(duration == "ANY"){
-        Course.find({'language': language, 'accommodation': false}, (err, data)=>{
-          res.send(data);
-        });
-      }
-      else{
-        Course.find({'language': language, 'duration': duration, 'accommodation': false}, (err, data)=>{
-          res.send(data);
-        });
-      }
-    }
-    else{
-      if(duration == "ANY"){
-        Course.find({'language': language}, (err, data)=>{
-          res.send(data);
-        });
-      }
-      else{
-        Course.find({'language': language, 'duration': duration}, (err, data)=>{
-          res.send(data);
-        });
-      }
-    }
-  }
-  else{
-    if(accommodation == 'Yes'){
-      if(duration == "ANY"){
-        Course.find({'country': country, 'language': language, 'accommodation': true}, (err, data)=>{
-          res.send(data);
-        });
-      }
-      else{
-        Course.find({'country': country, 'language': language, 'duration': duration, 'accommodation': true}, (err, data)=>{
-          res.send(data);
-        });
-      }
-    }
-    else if(accommodation == 'No'){
-      if(duration == "ANY"){
-        Course.find({'country': country, 'language': language, 'accommodation': false}, (err, data)=>{
-          res.send(data);
-        });
-      }
-      else{
-        Course.find({'country': country, 'language': language, 'duration': duration, 'accommodation': false}, (err, data)=>{
-          res.send(data);
-        });
-      }
-    }
-    else{
-      if(duration == "ANY"){
-        Course.find({'country': country, 'language': language}, (err, data)=>{
-          res.send(data);
-        });
-      }
-      else{
-        Course.find({'country': country, 'language': language, 'duration': duration}, (err, data)=>{
-          res.send(data);
-        });
-      }
-    }
-  }
-
-});
 
 
 
@@ -123,7 +43,7 @@ router.get('/:courseHtml', function(req,res,next){
           //Baslangic tarihi Kurs teklifi sonuna kadar aktif, ondan sonrasi pasif/disable olacak.
           //Hafta Sayisi Kursun verdigi imkanlar dogrultusunda Kurs secilince doldurulacak
           //Accommodation, Airport, HealInsurance Okul bilgisinden Cekilecek.
-          for(temp2=0;temp2<courseTimeList.length;temp2++){
+          /*for(temp2=0;temp2<courseTimeList.length;temp2++){
             if(programs[temp1].name == courseNameList[temp2]){
               courseNameController = 1;
             }
@@ -131,9 +51,9 @@ router.get('/:courseHtml', function(req,res,next){
           if(courseNameController == 0){
             courseNameList.push(programs[temp1].name);
             courseNameController =0;
-          }
+          }*/
         }
-        res.render('coursePage', {title: "Eduvizyon || "+courses[0].name, course: courses[0], programs: programs, selectedDate: req.query.date, courseTimeList: courseTimeList, courseNameList: courseNameList});
+        res.render('coursePage', {title: "Eduvizyon || "+courses[0].name, course: courses[0], programs: programs, selectedDate: req.query.date, courseTimeList: courseTimeList,});
       })
     }
       //COURSE PAGE COULDN'T FIND.
@@ -145,13 +65,6 @@ router.get('/:courseHtml', function(req,res,next){
 
 });
 
-
-router.get('/FilterInCoursePage/:time', function(req, res, next) {
-  const {time} = req.params;
-  Program.find({'time': time}, (err, data)=>{
-    res.send(data);
-  })
-});
 
 
 module.exports = router;
