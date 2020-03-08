@@ -3,12 +3,14 @@ const Schema = mongoose.Schema;
 
 const ProgramSchema = new Schema({
     courseId: Number,
+    name: String,
     time: String,
     hours: Number,
     startDateYear: Number,
-    startDteMonth: Number,
+    startDateMonth: Number,
     startDateDay: Number,
-    Price: String
+    price: String,
+    description: String
 });
 
 module.exports = mongoose.model('Programs', ProgramSchema);

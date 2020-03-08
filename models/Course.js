@@ -17,7 +17,8 @@ const CourseSchema = new Schema({
     Accommodation: Boolean,
     Airport: Boolean,
     HInsurance: Boolean,
-    discount: String
+    discount: String,
+    description: String
 
 });
 

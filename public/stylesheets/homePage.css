@@ -92,3 +92,12 @@
     z-index: 9999;
     display: none;
 }
+.lowProgramShadow-box{
+    background-color:#F14F15;
+    color:#E1F1A7;
+}
+
+.lowProgramShadow-box:hover{
+    background-color: rgb(251,119,61);
+    color:#E1F1A7;
+}
