@@ -4,7 +4,7 @@ append stylesheets
     link(rel="stylesheet", href="stylesheets/enterPage.css")
 block content
     .container.mt-5
-        .d-inline-block.float-left.position-sticky.col-3.rounded.p-0.medShadow-box-dark.mr-3(style='top:20px;')
+        #reservationSide.d-inline-block.float-left.position-sticky.col-3.rounded.p-0.medShadow-box-dark.mr-3(style='top:20px;')
             .card.border-0.text-white(style='width: 100%;')
                 .card-header.reservationSideHeader.py-1.font-weight-bold
                     | Reservation
@@ -42,36 +42,60 @@ block content
                                         option ...
                             .row.mb-3
                                 .col
-                                    span(style='font-size:0.7rem').font-weight-bold Accommodation
-                                    select#inputSelectCourseAccommodation.form-control.warningSelectBox
-                                        option(value="empty" hidden) Select.
-                                        option I Don't need
-                                        option ...
+                                    if course.accommodation == 'yes'
+                                        span(style='font-size:0.7rem').font-weight-bold Accommodation
+                                        select#inputSelectCourseAccommodation.form-control.warningSelectBox
+                                            option(value="empty" hidden) Select.
+                                            option(value="IDontNeed") I Don't Need
+                                            option(value="INeed") I Need
+                                    else
+                                        span(style='font-size:0.7rem').font-weight-bold.disabled Accommodation
+                                        select#inputSelectCourseAccommodation.form-control.warningSelectBox.disabled
+                                            option(value="empty" hidden) Select.
+                                            option(value="IDontNeed") I Don't Need
+                                            option(value="INeed") I Need
+
                             .row.mb-3
                                 .col
-                                    span(style='font-size:0.7rem').font-weight-bold Airport Pickup
-                                    select#inputSelectCourseAirportPickup.form-control.warningSelectBox
-                                        option(value="empty" hidden) Select.
-                                        option I Don't need
-                                        option I Need
+                                    if course.airport == 'yes'
+                                        span(style='font-size:0.7rem').font-weight-bold Airport Pickup
+                                        select#inputSelectCourseAirportPickup.form-control.warningSelectBox
+                                            option(value="empty" hidden) Select.
+                                            option(value="IDontNeed") I Don't Need
+                                            option(value="INeed") I Need
+                                    else
+                                        span(style='font-size:0.7rem').font-weight-bold.disabled Airport Pickup
+                                        select#inputSelectCourseAirportPickup.form-control.warningSelectBox.disabled
+                                            option(value="empty" hidden) Select.
+                                            option(value="IDontNeed") I Don't Need
+                                            option(value="INeed") I Need
                             .row.mb-3
                                 .col
-                                    span(style='font-size:0.7rem').font-weight-bold Health Insurance
-                                    select#inputSelectCourseHInsurance.form-control.warningSelectBox
-                                        option(value="empty" hidden) Select.
-                                        option I Don't need
-                                        option I Need
+                                    if course.hInsurance == 'yes'
+                                        span(style='font-size:0.7rem').font-weight-bold Health Insurance
+                                        select#inputSelectCourseHInsurance.form-control.warningSelectBox
+                                            option(value="empty" hidden) Select.
+                                            option(value="IDontNeed") I Don't Need
+                                            option(value="INeed") I Need
+                                    else
+                                        span(style='font-size:0.7rem').font-weight-bold.disabled Health Insurance
+                                        select#inputSelectCourseHInsurance.form-control.warningSelectBox.disabled
+                                            option(value="empty" hidden) Select.
+                                            option(value="IDontNeed") I Don't Need
+                                            option(value="INeed") I Need
+
                     li.list-group-item.reservationSideFooter.font-weight-bold
                         span(style='font-size:0.9rem') Additional costs
-                        .additionalCosts.mb-4
-                            span.ml-3(style='font-size:0.8rem') Registration fees
-                            span.float-right(style='font-size:0.8rem') 100$
+                        #additionalCosts.mb-4
+                            #cost1
+                                span.ml-3(style='font-size:0.8rem') Registration fees
+                                span.float-right(style='font-size:0.8rem') 100$
                         a.btn.btn-sm.col.btn-success.rounded.mb-2(href='#') Apply through an agency
                         a.btn.btn-sm.col.btn-primary.rounded(href='#') Get a free reserve
         .d-inline-block.ml-5.mb-5
             .bg-white.pt-3
                 h2.px-2
-                    span.ml-1
+                    #schoolNameHeader.span.ml-1
                         | #{course.name}
                 #carouselExampleInterval.carousel.slide(data-ride='carousel').container.px-2.mx-auto.mb-4.coursepageCoursel.mb-2
                     ol.carousel-indicators
@@ -106,7 +130,7 @@ block content
                     -var temp = 1;
                     each val in programs
                         .btn.lowProgramShadow-box.d-block.schoolProgram.w-700.rounded.border.ml-3.p-3.mb-3(style='' id='Program'+temp)
-                            h4.courseName Program #{temp}
+                            h4.courseName #{programs[temp-1].name}
                             .schoolProgramDescription(style='font-size:0.9rem')
                                 | Day-time: 
                                 span.courseDay-Time #{val.time}
@@ -136,3 +160,5 @@ block content
                 iframe.px-2(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12090.255760412922!2d-73.9888741!3d40.7496197!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb19cbc299b6757f2!2sASA%20College%20-%20Manhattan%20Campus!5e0!3m2!1str!2sde!4v1581611459168!5m2!1str!2sde', width='100%', height='225', frameborder='0', style='border:0;', allowfullscreen='')
     script.
     include mainFooter
+    append scripts
+        script(src="javascripts/coursePage.js")

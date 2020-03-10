@@ -13,7 +13,7 @@ $(document).ready(function(){
         $.ajax({
             url:'/homepage/'+Slanguage+'/'+Scountry+'/'+Sduration+'/'+Saccommodation,
             method: 'GET',
-            data: {Slanguage, Scountry, Sduration, Saccommodation},
+            //data: {Slanguage, Scountry, Sduration, Saccommodation},
             success: (data)=>{
                 data.slice(0, 6).forEach(element => {
                     var createCourse =

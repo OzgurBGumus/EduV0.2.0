@@ -8,9 +8,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const indexRouter = require('./routes/index');
-const  usersRouter = require('./routes/users');
-const  homepageRouter = require('./routes/homepage');
-const  courseRouter = require('./routes/course');
+//const  usersRouter = require('./routes/users');
+//const  homepageRouter = require('./routes/homepage');
+//const  courseRouter = require('./routes/course');
 const courseInfo = require('./routes/courseInfo');
 
 const  app = express();
@@ -39,9 +39,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'semantic')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//app.use('/users', usersRouter);
 //app.use('/homepage', homepageRouter);
-app.use('/coursePage', courseRouter);
+//app.use('/coursePage', courseRouter);
 app.use('/', courseInfo);
 
 // catch 404 and forward to error handler

@@ -14,9 +14,12 @@ const CourseSchema = new Schema({
     startDteMonth: Number,
     startDateDay: Number,
     duration: Number,
-    Accommodation: Boolean,
-    Airport: Boolean,
-    HInsurance: Boolean,
+    accommodation: String,
+    airport: String,
+    HInsurance: String,
+    accommodationPrice : String,
+    airportPrice : String,
+    hInsurancePrice : String,
     discount: String,
     description: String
 

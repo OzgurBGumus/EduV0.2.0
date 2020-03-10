@@ -17,8 +17,11 @@ router.get('/homepage', function(req, res, next) {
 
 router.get('/:courseHtml', function(req,res,next){
   const {courseHtml} = req.params;
+  console.log('before Find Test');
   Course.find({'courseHtml' : courseHtml}, (err, courses)=>{
-    if(courses.length){
+    console.log('Find Test');
+    console.log(courses.length)
+    if(courses.length >= 1){
       Program.find({'courseId' : courses[0].courseId}, (err, programs)=>{
         var temp1 =0;
         var temp2 =0;
@@ -54,13 +57,14 @@ router.get('/:courseHtml', function(req,res,next){
           }*/
         }
         res.render('coursePage', {title: "Eduvizyon || "+courses[0].name, course: courses[0], programs: programs, selectedDate: req.query.date, courseTimeList: courseTimeList,});
-      })
+      });
     }
       //COURSE PAGE COULDN'T FIND.
     else{
-      res.render('homePage', { title: 'Expresss', Courses: courses[0]});
+      Course.find({}, (err, data)=>{
+        res.render('homePage', { title: 'Expresss', Courses: data });
+      });
     }
-      
   });
 
 });

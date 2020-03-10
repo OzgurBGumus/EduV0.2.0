@@ -16,9 +16,9 @@ router.post('/course/new', function(req,res,next){
         startDateMonth: 09,
         startDateDay: 01,
         duration: 4,
-        Accommodation: true,
-        Airport: true,
-        HInsurance: true
+        Accommodation: "yes",
+        Airport: "yes",
+        HInsurance: "yes"
     });
 
     school.save((err, data)=>{
@@ -50,41 +50,49 @@ router.post('/program/new', function(req,res,next){
         res.json(data);
     });
 });
+
+router.get('/course/:schoolName', function(req, res, next){
+  const {schoolName} = req.params;
+  School.find({'name':schoolName}, (err, data)=>{
+    res.send(data[0]);
+  });
+})
 router.get('/homepage/:language/:country/:duration/:accommodation', function(req, res, next) {
+    console.log('---------->router.get(/homepage/:language/:country/:duration/:accommodation)');
     const {language, country, duration, accommodation} = req.params;
     if(country == 'All Countries'){
       if(accommodation == 'Yes'){
         if(duration == "ANY"){
-          Course.find({'language': language, 'accommodation': true}, (err, data)=>{
+          School.find({'language': language, 'accommodation': "yes"}, (err, data)=>{
             res.send(data);
           });
         }
         else{
-          Course.find({'language': language, 'duration': duration, 'accommodation': true}, (err, data)=>{
+          School.find({'language': language, 'duration': duration, 'accommodation': "yes"}, (err, data)=>{
             res.send(data);
           });
         }
       }
       else if(accommodation == 'No'){
         if(duration == "ANY"){
-          Course.find({'language': language, 'accommodation': false}, (err, data)=>{
+          School.find({'language': language, 'accommodation': "no"}, (err, data)=>{
             res.send(data);
           });
         }
         else{
-          Course.find({'language': language, 'duration': duration, 'accommodation': false}, (err, data)=>{
+          School.find({'language': language, 'duration': duration, 'accommodation': "no"}, (err, data)=>{
             res.send(data);
           });
         }
       }
       else{
         if(duration == "ANY"){
-          Course.find({'language': language}, (err, data)=>{
+          School.find({'language': language}, (err, data)=>{
             res.send(data);
           });
         }
         else{
-          Course.find({'language': language, 'duration': duration}, (err, data)=>{
+          School.find({'language': language, 'duration': duration}, (err, data)=>{
             res.send(data);
           });
         }
@@ -93,36 +101,36 @@ router.get('/homepage/:language/:country/:duration/:accommodation', function(req
     else{
       if(accommodation == 'Yes'){
         if(duration == "ANY"){
-          Course.find({'country': country, 'language': language, 'accommodation': true}, (err, data)=>{
+          School.find({'country': country, 'language': language, 'accommodation': "yes"}, (err, data)=>{
             res.send(data);
           });
         }
         else{
-          Course.find({'country': country, 'language': language, 'duration': duration, 'accommodation': true}, (err, data)=>{
+          School.find({'country': country, 'language': language, 'duration': duration, 'accommodation': "yes"}, (err, data)=>{
             res.send(data);
           });
         }
       }
       else if(accommodation == 'No'){
         if(duration == "ANY"){
-          Course.find({'country': country, 'language': language, 'accommodation': false}, (err, data)=>{
+          School.find({'country': country, 'language': language, 'accommodation': "no"}, (err, data)=>{
             res.send(data);
           });
         }
         else{
-          Course.find({'country': country, 'language': language, 'duration': duration, 'accommodation': false}, (err, data)=>{
+          School.find({'country': country, 'language': language, 'duration': duration, 'accommodation': "no"}, (err, data)=>{
             res.send(data);
           });
         }
       }
       else{
         if(duration == "ANY"){
-          Course.find({'country': country, 'language': language}, (err, data)=>{
+          School.find({'country': country, 'language': language}, (err, data)=>{
             res.send(data);
           });
         }
         else{
-          Course.find({'country': country, 'language': language, 'duration': duration}, (err, data)=>{
+          School.find({'country': country, 'language': language, 'duration': duration}, (err, data)=>{
             res.send(data);
           });
         }
