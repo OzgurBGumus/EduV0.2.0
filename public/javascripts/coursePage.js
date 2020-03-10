@@ -16,6 +16,8 @@ $(document).ready(function(){
     var PstartDateYear;
     var Pprice;
     var programNumber = 0;
+    var tempSelectCourseTime = document.getElementById("inputSelectCourseTime").selectedIndex;
+    console.log($('#inputSelectCourseTime option').eq(tempSelectCourseTime).val());
     if($('#inputSelectCourseTime option').eq(tempSelectCourseTime).val() == "empty"){
         disableResSide();
     }
@@ -53,8 +55,8 @@ $(document).ready(function(){
 
 
     });
-    var tempSelectCourseTime = document.getElementById("inputSelectCourseTime").selectedIndex;
     $('#inputSelectCourseTime').on('change', ()=>{
+        disableResSide();
         $('#reservationSide').addClass('disabled');
         tempSelectCourseTime = document.getElementById("inputSelectCourseTime").selectedIndex;
         var selectedCourseTime = $('#inputSelectCourseTime option').eq(tempSelectCourseTime).val();
@@ -88,14 +90,14 @@ $(document).ready(function(){
                 method: 'GET',
                 success: (data)=>{
                     var accommodationElement =
-                        '<div id="hInsuranceExtra"><span class="ml-3" style="font-size:0.8rem;">Accommodation</span><span class="float-right" style="font-size:0.8rem;">'+data.accommodationPrice +'$</span></div>';
+                        '<div id="accommodationExtra"><span class="ml-3" style="font-size:0.8rem;">Accommodation</span><span class="float-right" style="font-size:0.8rem;">'+data.accommodationPrice +'$</span></div>';
                     $('#additionalCosts').append(accommodationElement);
                     $('#reservationSide').removeClass('disabled');
                 }
             })
         }
         else{
-            $('#hInsuranceExtra').remove();
+            $('#accommodationExtra').remove();
             $('#reservationSide').removeClass('disabled');
         }
     });
@@ -111,14 +113,14 @@ $(document).ready(function(){
                 method: 'GET',
                 success: (data)=>{
                     var accommodationElement =
-                        '<div id="hInsuranceExtra"><span class="ml-3" style="font-size:0.8rem;">Airport Pickup</span><span class="float-right" style="font-size:0.8rem;">'+data.airportPrice +'$</span></div>';
+                        '<div id="airportPickupExtra"><span class="ml-3" style="font-size:0.8rem;">Airport Pickup</span><span class="float-right" style="font-size:0.8rem;">'+data.airportPrice +'$</span></div>';
                     $('#additionalCosts').append(accommodationElement);
                     $('#reservationSide').removeClass('disabled');
                 }
             })
         }
         else{
-            $('#hInsuranceExtra').remove();
+            $('#airportPickupExtra').remove();
             $('#reservationSide').removeClass('disabled');
         }
     });

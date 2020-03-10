@@ -16,7 +16,7 @@ const CourseSchema = new Schema({
     duration: Number,
     accommodation: String,
     airport: String,
-    HInsurance: String,
+    hInsurance: String,
     accommodationPrice : String,
     airportPrice : String,
     hInsurancePrice : String,
