@@ -1,7 +1,6 @@
 extends mainLayout
 append stylesheets
     link(rel="stylesheet", href="/stylesheets/homePage.css")
-
 block content
     #carouselExampleInterval.carousel.slide(data-ride='carousel').container.mx-auto.homepageCoursel.mb-2
         ol.carousel-indicators
@@ -24,7 +23,8 @@ block content
     .container
         .hotDiscountsContainer.p-3.bg-white.mb-5
             h4.mt-2.mb-4.ml-3 Hot Discounts
-            .courseListBox.mx-5
+            #hotdiscountsListBox.courseListBox.mx-5
+            //-
                 - var temp = 0;
                 each val in Courses
                     if temp < 3
@@ -100,3 +100,5 @@ block content
         });
 
     include mainFooter
+    append scripts
+        script(src="javascripts/homePage.js")

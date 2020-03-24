@@ -5,7 +5,7 @@ const School = require('../models/Course');
 const Program = require('../models/Program');
 /// FOR NOW ADD NEW COURSE WITH THIS JS
 
-router.post('/course/new', function(req,res,next){
+router.get('/course/new', function(req,res,next){
     const school = new School({
         courseId: 1,
         courseImg: '/images/homePage-Course5.png',
@@ -29,18 +29,21 @@ router.post('/course/new', function(req,res,next){
     });
 });
 
-router.post('/program/new', function(req,res,next){
+router.get('/createProgram/new', function(req,res,next){
     const program = new Program({
         courseId: 1,
+        name: 'ESL',
         time: 'Morning',
-        hours: '20',
+        hours: '24',
         startDateYear: 2020,
         startDteMonth: 7,
         startDateDay: 1,
         finishDateYear : 2022,
         finishDateMonth : 10,
         finishDateDay : 30,
-        Price: '300'
+        Price: '300',
+        discount: '20',
+        discountedPrice: '240'
         });
 
     program.save((err, data)=>{
@@ -53,9 +56,43 @@ router.post('/program/new', function(req,res,next){
 
 router.get('/course/:schoolName', function(req, res, next){
   const {schoolName} = req.params;
-  School.find({'name':schoolName}, (err, data)=>{
-    res.send(data[0]);
-  });
+  if(schoolName == 'all'){
+    School.find({}, (err, data)=>{
+      res.send(data);
+    });
+  }
+  else{
+    School.find({'name':schoolName}, (err, data)=>{
+      res.send(data[0]);
+    });
+  }
+})
+
+router.get('/program/:name', function(req, res, next){
+  const {name} = req.params;
+  if(name == 'all'){
+    Program.find({}, (err, data)=>{
+      res.send(data);
+    });
+  }
+  else{
+    Program.find({'name':name}, (err, data)=>{
+      res.send(data);
+    });
+  }
+})
+router.get('/programCourseId/:courseid', function(req, res, next){
+  const {courseid} = req.params;
+  if(courseid == 'all'){
+    Program.find({}, (err, data)=>{
+      res.send(data);
+    });
+  }
+  else{
+    Program.find({'courseId':courseid}, (err, data)=>{
+      res.send(data);
+    });
+  }
 })
 router.get('/homepage/:language/:country/:duration/:accommodation', function(req, res, next) {
     console.log('---------->router.get(/homepage/:language/:country/:duration/:accommodation)');
@@ -155,6 +192,39 @@ router.get('/FilterInCoursePage/:time/:program', function(req, res, next) {
       console.log(data);
     });
 });
+router.get('/FilterInCoursePage/:time/:program/:hours', function(req, res, next) {
+  const {time, program, hours} = req.params;
+  console.log('----------------------------------------------------------------------------------------'+time, program);
+  Program.find({'time': time, 'name': program, 'hours': hours}, (err, data)=>{
+    res.send(data);
+  });
+});
+/*var pdfMake = require('pdfmake/build/pdfmake.js');
+var pdfFonts = require('pdfmake/build/vfs_fonts.js');
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+router.get('/confirm/createPdf', function(req,res,next){
+    //const name = req.body.name
+
+    var documentDefinition = {
+      content: [
+        'First Paragraph',
+        'another paragraph'
+      ]
+    };
+
+    const pdfDoc = pdfMake.createPdf(documentDefinition);
+    pdfDoc.getBase64((data)=>{
+      res.writeHead(200,
+      {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition':'attachment;filename="testt.pdf"'
+      });
+
+      const download  = Buffer.from(data.toString('utf-8'), 'base64');
+      res.end(data);
+    })
+    res.end(pdfDoc)
+});*/
 
 
 module.exports = router;

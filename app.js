@@ -31,12 +31,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'node_modules')));
 //PUBLICI YOK SAYIP ICERISINDEN BAŞLATIYOR!!
 //YANLIS: public/stylesheets/style.css
 //DOGRU: stylesheets/style.css
 
 
-app.use(express.static(path.join(__dirname, 'semantic')));
+//app.use(express.static(path.join(__dirname, 'semantic')));
 
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);

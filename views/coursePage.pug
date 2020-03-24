@@ -8,7 +8,15 @@ block content
             .card.border-0.text-white(style='width: 100%;')
                 .card-header.reservationSideHeader.py-1.font-weight-bold
                     | Reservation
-                    span.float-right 300$
+                    span.float-right
+                        span#selectedPrice.mr-3
+                            del
+                                | $
+                                span 0
+
+                        span
+                            | $
+                            span#discountedPrice 0
                 ul.list-group.list-group-flush
                     li.list-group-item.reservationSideDescription
                         form
@@ -27,13 +35,7 @@ block content
                             .row.mb-3
                                 .col
                                     span(style='font-size:0.7rem').font-weight-bold Course Start Date
-                                    select#inputSelectCourseDate.form-control.warningSelectBox
-                                        if selectedDate
-                                            option(selected='')
-                                                | #{selectedDate}
-                                        else
-                                            option(value="empty" hidden) Select.
-                                        option ...
+                                    input(type="date")#inputSelectCourseDate.form-control.warningSelectBox
                             .row.mb-3
                                 .col
                                     span(style='font-size:0.7rem').font-weight-bold Number Of Weeks
@@ -54,7 +56,6 @@ block content
                                             option(value="empty" hidden) Select.
                                             option(value="IDontNeed") I Don't Need
                                             option(value="INeed") I Need
-
                             .row.mb-3
                                 .col
                                     if course.airport == 'yes'
@@ -87,10 +88,7 @@ block content
                     li.list-group-item.reservationSideFooter.font-weight-bold
                         span(style='font-size:0.9rem') Additional costs
                         #additionalCosts.mb-4
-                            #cost1
-                                span.ml-3(style='font-size:0.8rem') Registration fees
-                                span.float-right(style='font-size:0.8rem') 100$
-                        a.btn.btn-sm.col.btn-success.rounded.mb-2(href='#') Apply through an agency
+                        a#queueButton.btn.btn-sm.col.btn-success.rounded.mb-2(href='/coursee/confirm') Get Queue
                         a.btn.btn-sm.col.btn-primary.rounded(href='#') Get a free reserve
         .d-inline-block.ml-5.mb-5
             .bg-white.pt-3

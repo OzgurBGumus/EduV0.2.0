@@ -8,8 +8,10 @@ router.get('/', function(req, res, next) {
   res.render('enterPage', { title: 'Enterpage' });
 });
 router.get('/homepage', function(req, res, next) {
-  Course.find({}, (err, data)=>{
-    res.render('homePage', { title: 'Expresss', Courses: data });
+  Course.find({}, (err, courses)=>{
+    Program.find({}, (err, programs)=>{
+      res.render('homePage', { title: 'Expresss', Courses: courses, Programs: programs });
+    })
   });
 });
 
@@ -70,5 +72,10 @@ router.get('/:courseHtml', function(req,res,next){
 });
 
 
+router.get('/coursee/confirm', function(req, res, next){
+  ///coursee/confirm?BurdaKullanilacakDegisken=VerilecekDeger&BurdaKullanilacakDegisken=VerilecekDeger&
+  console.log(req.query);
+  res.render('queueConfirm', {title: 'queueConfirm', inputs:req.query});
+});
 
 module.exports = router;

@@ -13,6 +13,8 @@ const ProgramSchema = new Schema({
     finishDateMonth : Number,
     finishDateDay : Number,
     price: String,
+    discount: String,
+    discountedPrice: String,
     description: String
 });
 
