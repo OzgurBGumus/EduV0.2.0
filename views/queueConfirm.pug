@@ -17,57 +17,93 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
     title= title
   body
-    button#test TESTTTT
     .d-inline-block(style='margin:2rem;')
         div
             span(style='width:10rem; display:inline-block')
-                |   Ad
+                |   Ad:
             input#name(type="text")
         div
-            span(style='width:10rem; display:inline-block')   Soyad
+            span(style='width:10rem; display:inline-block')
+                |   Soyad:
             input#surname(type="text")
         div
-            span(style='width:10rem; display:inline-block')   email
-            input#mail(type="mail")
+            span(style='width:10rem; display:inline-block')
+                |   Email:
+            input#email(type="text")
         div
-            span(style='width:10rem; display:inline-block')   Telefon Numarasi
-            input#born(type="text" onkeypress='return event.charCode>= 48 &&event.charCode<= 57')
-        a(href='/confirm/createPdf' style='border: 1px solid black; background-color:black; color:white; font-size:2rem; font-weight:bold padding:1rem; margin: 1rem;')
+            span(style='width:10rem; display:inline-block')
+                |   Uyruk:
+            input#nationality(type="text")
+        div
+            span(style='width:10rem; display:inline-block')
+                |   Ikamet edilen ulke:
+            input#residence(type="text")
+        div
+            span(style='width:10rem; display:inline-block')
+                |   Ikamet edilen sehir:
+            input#city(type="text")
+        div
+            span(style='width:10rem; display:inline-block')
+                |   Telefon Numarasi:
+            input#mobileNo(type="text" onkeypress='return event.charCode>= 48 &&event.charCode<= 57')
+        div
+            span(style='width:10rem; display:inline-block')
+                |   Iletisim Sekli:
+            input#communication(type="text")
+        div
+            span(style='width:10rem; display:inline-block')
+                |   Bize Not Birakin:
+            textarea#notes(name="", cols="30", rows="10")
+        span(style='border: 1px solid black; background-color:black; color:white; font-size:2rem; font-weight:bold padding:1rem; margin: 1rem;')
             span
-                |   Give me Pdf
+                button#createNewReservation Complete
 
     .d-inline-block(style='margin: 2rem;')
         div
             |   School:
-            span#schoolName
-            |   #{inputs.school}
+            span#confirmSchoolName
+                |   #{inputs.school}
         div
             |   Program:
-            span#programName
-            |   #{inputs.program}
+            span#confirmProgramName
+                |   #{inputs.program}
         div
             |   Time:
-            |   #{inputs.time}
+            span#confirmTime
+                |   #{inputs.time}
         div
             |   Date:
-            span#Date
-            |   #{inputs.date}
+            span#confirmDate
+                |   #{inputs.date}
         div
             |   Weeks:
-            span#week
+            span#confirmWeek
                 |   #{inputs.week}
         div
             |   accommodation:
-            span#accommodation
-                |   #{inputs.accommodation}
+            span#confirmAccommodation
+                if inputs.accommodation == 'INeed'
+                    |   Yes
+                else
+                    |   No
         div
             |   Airport Pickup:
-            span#airport
-                |   #{inputs.airport}
+            span#confirmAirport
+                if inputs.airport == 'INeed'
+                    |   Yes
+                else
+                    |   No
         div
             |   Healt Insurance:
-            span#hInsurance
-                |   #{inputs.hInsurance}
+            span#confirmHInsurance
+                if inputs.hInsurance == 'INeed'
+                    |   Yes
+                else
+                    |   No
+    
+    .d-inline-block(style='margin: 2rem;')
+        #prices
+            h3  Price List
     script(src="/javascripts/queueConfirm.js")
     script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo', crossorigin='anonymous')
     script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js', integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6', crossorigin='anonymous')

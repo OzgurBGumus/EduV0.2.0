@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const ProgramSchema = new Schema({
     courseId: Number,
+    programId: Number,
     name: String,
     time: String,
     hours: Number,

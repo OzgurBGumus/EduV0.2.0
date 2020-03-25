@@ -78,4 +78,8 @@ router.get('/coursee/confirm', function(req, res, next){
   res.render('queueConfirm', {title: 'queueConfirm', inputs:req.query});
 });
 
+router.get('/reservation/completed/:id', function(req,res,next){
+  const {id} = req.params;
+  res.render('reservationCompleted', {title: 'queueConfirm', id:id});
+});
 module.exports = router;

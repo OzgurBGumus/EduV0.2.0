@@ -3,6 +3,7 @@ const router = express.Router();
 //Models
 const School = require('../models/Course');
 const Program = require('../models/Program');
+const LReservation = require('../models/LReservation');
 /// FOR NOW ADD NEW COURSE WITH THIS JS
 
 router.get('/course/new', function(req,res,next){
@@ -32,6 +33,7 @@ router.get('/course/new', function(req,res,next){
 router.get('/createProgram/new', function(req,res,next){
     const program = new Program({
         courseId: 1,
+        programId: 555,
         name: 'ESL',
         time: 'Morning',
         hours: '24',
@@ -53,7 +55,12 @@ router.get('/createProgram/new', function(req,res,next){
         res.json(data);
     });
 });
-
+router.get('/findSchool/id', function(req,res,next){
+  var id = req.query.id;
+  School.find({'courseId': id}, (err, school)=>{
+    res.send(school[0]);
+  })
+})
 router.get('/course/:schoolName', function(req, res, next){
   const {schoolName} = req.params;
   if(schoolName == 'all'){
@@ -199,32 +206,185 @@ router.get('/FilterInCoursePage/:time/:program/:hours', function(req, res, next)
     res.send(data);
   });
 });
-/*var pdfMake = require('pdfmake/build/pdfmake.js');
-var pdfFonts = require('pdfmake/build/vfs_fonts.js');
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-router.get('/confirm/createPdf', function(req,res,next){
-    //const name = req.body.name
+router.get('/confirm/:cName/:cTime/:cWeek', function(req,res,next){
+  const {cName, cTime, cWeek} = req.params;
+  var ncName = '';
+  var ncTime = '';
+  var ncWeek = parseInt(cWeek);
+  for(var i=0;i<cName.length;i++){
+    if(cName[i] !=' '){
+      ncName = ncName+cName[i];
+    }
+  }
+  for(var i=0;i<cTime.length;i++){
+    if(cTime[i] !=' '){
+      ncTime = ncTime+cTime[i];
+    }
+  }
+  Program.find({'name': ncName, 'time': ncTime, 'hours': ncWeek}, (err, program)=>{
+    School.find({'courseId':program[0].courseId}, (err,  school)=>{
+      var data = [school[0], program[0]];
+      res.send(data);
+    });
+  });
+});
 
-    var documentDefinition = {
-      content: [
-        'First Paragraph',
-        'another paragraph'
-      ]
-    };
+router.get('/reservation/getPdf', function(req,res,next){
+  var schoolId = req.query.schoolId;
+  var programId = req.query.programId;
+  var accommodation = req.query.accommodation;
+  var Paccommodation = '';
+  var airport = req.query.airport;
+  var Pairport = '';
+  var hInsurance = req.query.hInsurance;
+  var PhInsurance = '';
+  var name = req.query.name;
+  var surname = req.query.surname;
+  var email = req.query.email;
+  var nationality = req.query.nationality;
+  var residence = req.query.residence;
+  var city = req.query.city;
+  var mobileNo = req.query.mobileNo;
+  var communication = req.query.communication;
+  var notes = req.query.notes;
+  var currentDate = new Date();
+  var currentMinute = currentDate.getMinutes();
+  var currentHour = currentDate.getHours();
+  var currentDay = currentDate.getDay();
+  var currentMonth = currentDate.getMonth();
+  var currentYear = currentDate.getFullYear();
+  var startDay = '';
+  var startMonth = '';
+  var startYear = '';
+  var timeTemp = 0;
+  for(var i = 0;timeTemp<req.query.startDate.length;i++){
+    if(req.query.startDate[i] != ' '){
+      if(req.query.startDate[i] == '/'){
+        timeTemp = i +1;
+        break;
+      }
+      else{
+        startDay = startDay + req.query.startDate[i];
+      }
+    }
+  }
+  for(var i = timeTemp;i<req.query.startDate.length;i++){
+    if(req.query.startDate[i] == '/'){
+      timeTemp = i +1;
+      break;
+    }
+    else{
+      startMonth = startMonth + req.query.startDate[i];
+    }
+  }
+  for(var i = timeTemp;i<req.query.startDate.length;i++){
+      startYear = startYear + req.query.startDate[i];
+  }
+  School.find({'courseId': schoolId}, (err, school)=>{
+    if(accommodation == '  Yes'){
+      Paccommodation = school[0].accommodationPrice;
+    }
+    else{
+      Paccommodation='';
+    }
+    if(airport == '  Yes'){
+      Pairport = school[0].airportPrice;
+    }
+    else{
+      Pairport='';
+    }
+    if(hInsurance == '  Yes'){
+      PhInsurance = school[0].hInsurancePrice;
+    }
+    else{
+      PhInsurance='';
+    }
+    Program.find({'programId': programId}, (err, program)=>{
+      LReservation.find({}, (err, reservations)=>{
+        var forTest = false;
+        for(var i=0; i<reservations.length;i++){
+          if(reservations[i].reservationId != i){
+            forTest = true;
+            const reservation = new LReservation({
+              reservationId: i,
+              reservationDateMinute: currentMinute,
+              reservationDateHour: currentHour,
+              reservationDateDay: currentDay,
+              reservationDateMonth: currentMonth,
+              reservationDateYear: currentYear,
+              name: name,
+              surname: surname,
+              email: email,
+              nationality: nationality,
+              residence: residence,
+              city: city,
+              mobileNo: mobileNo,
+              communication: communication,
+              notes: notes,
+              schoolId: schoolId,
+              programId: programId,
+              startDateDay: parseInt(startDay),
+              startDateMonth: parseInt(startMonth),
+              startDateYear: parseInt(startYear),
+              accommodation: accommodation,
+              Paccommodation: Paccommodation,
+              airport: airport,
+              Pairport: Pairport,
+              hInsurance: hInsurance,
+              PhInsurance: PhInsurance,
+            });
+            reservation.save((err, data)=>{
+              if(err)
+                console.log(err);
 
-    const pdfDoc = pdfMake.createPdf(documentDefinition);
-    pdfDoc.getBase64((data)=>{
-      res.writeHead(200,
-      {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition':'attachment;filename="testt.pdf"'
+              res.json(data);
+            });
+          }
+        }
+        if(forTest == false){
+          const reservation = new LReservation({
+            reservationId: reservations.length,
+            reservationDateMinute: currentMinute,
+            reservationDateHour: currentHour,
+            reservationDateDay: currentDay,
+            reservationDateMonth: currentMonth,
+            reservationDateYear: currentYear,
+            name: name,
+            surname: surname,
+            email: email,
+            nationality: nationality,
+            residence: residence,
+            city: city,
+            mobileNo: mobileNo,
+            communication: communication,
+            notes: notes,
+            schoolId: schoolId,
+            programId: programId,
+            startDateDay: parseInt(startDay),
+            startDateMonth: parseInt(startMonth),
+            startDateYear: parseInt(startYear),
+            accommodation: accommodation,
+            Paccommodation: Paccommodation,
+            airport: airport,
+            Pairport: Pairport,
+            hInsurance: hInsurance,
+            PhInsurance: PhInsurance,
+          });
+          reservation.save((err, data)=>{
+            if(err)
+              console.log(err);
+
+            res.json(data);
+          });
+        }
       });
-
-      const download  = Buffer.from(data.toString('utf-8'), 'base64');
-      res.end(data);
-    })
-    res.end(pdfDoc)
-});*/
-
-
+    });
+  });
+});
+router.get('/reservation/getDetails', function(req,res,next){
+  var reservationId = req.query.reservationId;
+  LReservation.find({'reservationId': reservationId}, (err, reservation)=>{
+    res.send(reservation[0]);
+  });
+});
 module.exports = router;
