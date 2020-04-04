@@ -18,7 +18,7 @@ $(document).ready(function(){
         }
         programNumber++;
     }
-    //How Many Program This Course Have.
+    //How Many Program This Course Have
     programNumber--;
     var Pname;
     var PcourseDayTime;
