@@ -82,7 +82,7 @@ $(document).ready(function(){
                         {
                             text: [
                                     {text: 'Customer Copy - Non Fiscal \n \n', style: 'subheader'},
-                                    {text: 'Date: \n \n', style: 'normal'},
+                                    {text: 'Date: + '+rHour+':'+rMinute+'    '+rDay+'/'+rMonth+'/'+rYear+'\n \n', style: 'normal'},
                                     {text: 'Eduvizyon \n \n', style: 'big', bold: true},
                                     {text: 'Zeytinlik Mahallesi Fişekhane Caddesi, Türkçü Sokak Aral Apt. No : 2 - Daire : 7, 34140 Bakırköy\n\n', style:'normal'},
                                     {text: '(0212) 543 58 06 \n0 535 712 07 90 \nFaks: 0 212 543 58 06\n\ninfo@eduvizyon.com', style:'normal'}
@@ -91,8 +91,8 @@ $(document).ready(function(){
                         },
                         {
                             text:[
-                                {text: 'Online Reservation Application:\n', style:'normal', bold:true, alignment: 'center'},
-                                {text : 'Offer No:', style:'normal', bold:true, alignment:'center'}
+                                {text: 'Online Reservation Application\n', style:'normal', bold:true, alignment: 'center'},
+                                {text : 'Offer No:'+id, style:'normal', bold:true, alignment:'center'}
                                 ], margin: [0, 190, 0, 0]
                         },
                         {
