@@ -1,0 +1,127 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+#first{
+    background-image: url('/images/testHomepageBg.jpg');
+    background-size: cover;
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+}
+#firstContent{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+}
+#firstContent div{
+    font-size: 1.6rem;
+    width: 70vw;
+}
+#exploreLSchools{
+    color: white;
+    font-weight: 500;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+#second{
+    height: 100vh;
+    box-sizing: border-box;
+}
+.searchBox-navbar .navbar-toggler{
+    width: 90vw;
+    border: 1px solid #1e90ff!important;
+    background-color: #1e90ff;
+    color: white!important;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+.searchBox{
+    margin-right: 0px!important;
+}
+form button{
+    color: white!important;
+    display: block!important;
+    width: 90vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+.courseLength{
+    margin-top: 1rem!important;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+#courseLengthText{
+    font-weight: bold;
+    color: red;
+}
+#leftSide{
+    float: left;
+    width: 22vw!important;
+    height: 60vh!important;
+    background-color: orange;
+    margin-left: 8vw;
+    margin-top: 10vh;
+}
+#rightSide{
+    float: right;
+}
+
+
+
+
+
+@media only screen and (max-width: 760px) {
+    .searchBox{
+        float: none!important;
+        text-align: center;
+        padding-bottom: 1rem;
+    }
+    form select{
+        font-weight: 500!important;
+        font-size: 0.8rem!important;
+        margin-bottom: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    .searchBox #desktopForm{
+        display: none;
+    }
+    #mobileFilters{
+        display: inline;
+    }
+    #mobileFilters button{
+        width: 30vw;
+    }
+    .courseLength{
+        display: inline;
+    }
+}
+
+
+@media only screen and (min-width: 768px) {
+    #firstContent div{
+        font-size: 3rem;
+        width: 70vw;
+    }
+    .searchBox{
+        float: right;
+        width: 65vw;
+        display: inline-block;
+        margin-right: 3rem;
+        padding-bottom: 0px;
+        border-bottom: 2px solid black;
+    }
+    form button{
+        display: inline!important;
+        width: 7vw;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    #mobileFilters{
+        display: none;
+    }
+}

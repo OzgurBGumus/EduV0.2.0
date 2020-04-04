@@ -12,9 +12,12 @@ const indexRouter = require('./routes/index');
 //const  homepageRouter = require('./routes/homepage');
 //const  courseRouter = require('./routes/course');
 const courseInfo = require('./routes/courseInfo');
+const panelRouter = require('./routes/panel');
+const verifyToken = require('./middleware/verify-token');
 
 const  app = express();
-mongoose.connect('mongodb://test:test123@ds037597.mlab.com:37597/heroku_x2q4wjml', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://test:test123@ds037597.mlab.com:37597/heroku_x2q4wjml', { useNewUrlParser: true, useUnifiedTopology: true });
+app.set('api_secret_key', 'Test Api Secret Key');
 mongoose.connection.on('open', ()=>{
   console.log('---MongoDB: Connected...');
 });
@@ -44,6 +47,9 @@ app.use('/', indexRouter);
 //app.use('/homepage', homepageRouter);
 //app.use('/coursePage', courseRouter);
 app.use('/', courseInfo);
+app.use('/panel/in', verifyToken);
+app.use('/panel', panelRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

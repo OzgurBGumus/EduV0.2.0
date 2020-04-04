@@ -21,6 +21,9 @@ $(document).ready(function(){
             //[1] --> Program
             schoolId = data[0].courseId;
             programId = data[1].programId;
+            $('#confirmSchoolName').text(data[0].name);
+            $('#confirmLocation').text(data[0].country+' '+data[0].state+' '+data[0].city);
+            $('#confirmProgramName').text(data[1].name);
 
             $('#confirmSchoolName').text(data[0].name);
             var coursePrice = 

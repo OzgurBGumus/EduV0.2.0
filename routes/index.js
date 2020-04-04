@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Course = require('../models/Course');
-const Program = require('../models/Program')
+const Program = require('../models/Program');
 
 /* GET Enter Page. */
 router.get('/', function(req, res, next) {
@@ -81,5 +81,9 @@ router.get('/coursee/confirm', function(req, res, next){
 router.get('/reservation/completed/:id', function(req,res,next){
   const {id} = req.params;
   res.render('reservationCompleted', {title: 'queueConfirm', id:id});
+});
+
+router.get('/dev/test/homePage', function(req,res,next){
+  res.render('testHomepage', {title:'Alpha'});
 });
 module.exports = router;

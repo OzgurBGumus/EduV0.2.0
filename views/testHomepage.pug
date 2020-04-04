@@ -1,0 +1,75 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(http-equiv='X-UA-Compatible', content='ie=edge')
+    block stylesheets
+      link(href='https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css', rel='stylesheet', type='text/css')
+      link(rel="stylesheet", href="/stylesheets/testHomepage.css")
+      link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css', integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh', crossorigin='anonymous')
+    block headersScripts
+        script(src='https://code.jquery.com/jquery-3.4.1.js', integrity='sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=', crossorigin='anonymous')
+        script(src='https://kit.fontawesome.com/6bc33e778c.js', crossorigin='anonymous')
+        script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo', crossorigin='anonymous')
+        script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js', integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6', crossorigin='anonymous')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    title= title
+  body
+    #first
+        #firstContent
+            .mb-4
+                |   Find Your Language Course Abroad at the Lowest Price
+            button#exploreLSchools.btn.btn-light.px-5.py-3(href='#second') Explore Language Schools
+    #second.pt-3
+        #leftSide
+        #rightSide
+            .searchBox.mt-5.clearfix
+                h2.mb-4
+                    |   Hayalinizdeki Okul Aşşağıda biryerde!
+                form#desktopForm.form-inline.my-lg-0.mb-3
+                    select.form-control.mr-sm-2.text-secondary
+                        option(selected='' hidden) Studying language
+                    select.form-control.mr-sm-2.text-secondary
+                        option(selected='' hidden) Destination
+                    select.form-control.mr-sm-2.text-secondary
+                        option(selected='' hidden) Start date
+                    select.form-control.mr-sm-2.text-secondary
+                        option(selected='' hidden) Course duration
+                    select.form-control.mr-sm-2.text-secondary
+                        option(selected='' hidden) Studying Language
+                    button.btn.btn-secondary.my-sm-0(type='submit') Search
+                .courseLength.mt-3
+                    span Gösterilen Kurs Sayısı: 
+                        span#courseLengthText 000
+                #mobileFilters.float-right.mr-4
+                    button.btn.btn-primary.btn-sm(type='button', data-toggle='modal', data-target='#filterModal')
+                        | Filter
+                    #filterModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+                        .modal-dialog(role='document' style='margin:0px;')
+                            .modal-content
+                                .modal-header(style='border:none;')
+                                    h5#exampleModalLabel.modal-title Filter
+                                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                                        span(aria-hidden='true') ×
+                                .modal-body(style='border:none;')
+                                    form.form-inline.my-lg-0
+                                        select.form-control.mr-sm-2.text-secondary
+                                            option(selected='' hidden) Studying language
+                                        select.form-control.mr-sm-2.text-secondary
+                                            option(selected='' hidden) Destination
+                                        select.form-control.mr-sm-2.text-secondary
+                                            option(selected='' hidden) Start date
+                                        select.form-control.mr-sm-2.text-secondary
+                                            option(selected='' hidden) Course duration
+                                        select.form-control.mr-sm-2.text-secondary
+                                            option(selected='' hidden) Studying Language
+                                        button.btn.btn-secondary.my-sm-0(type='submit') Search
+                                .modal-footer(style='border:none;')
+                                    button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                                    button.btn.btn-primary(type='button') Save changes
+
+
+    script(src="/javascripts/testHomepage.js")
+    script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo', crossorigin='anonymous')
+    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js', integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6', crossorigin='anonymous')
