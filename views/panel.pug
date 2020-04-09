@@ -1,9 +1,43 @@
 <!DOCTYPE html>
 html(lang="en")
     head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title #{title}
+        meta(charset='UTF-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        meta(http-equiv='X-UA-Compatible', content='ie=edge')
+        block stylesheets
+            link(href='https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css', rel='stylesheet', type='text/css')
+            link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css', integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh', crossorigin='anonymous')
+        block headersScripts
+            script(src='https://code.jquery.com/jquery-3.4.1.js', integrity='sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=', crossorigin='anonymous')
+            script(src='https://kit.fontawesome.com/6bc33e778c.js', crossorigin='anonymous')
+            script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo', crossorigin='anonymous')
+            script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js', integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6', crossorigin='anonymous')
+        meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+        title= title
     body
-        |   Inside.
-        span#token   #{token}
+        .clearfix
+            #panelMenu.m-3.d-inline-block.float-left(style='width:200px;')
+                button#showSchools.btn.btn-secondary.rounded-0.border.p-3(style='width:200px;')
+                    |   Schools
+                button#showCountries.btn.btn-secondary.rounded-0.border.p-3(style='width:200px;')
+                    |   Countries
+                button#showReservations.btn.btn-secondary.rounded-0.border.p-3(style='width:200px;')
+                    |   Reservations
+                button#showUsers.btn.btn-secondary.rounded-0.border.p-3(style='width:200px;')
+                    |   Users
+                |   User: #{username}
+            #content.m-3.d-inline-block.float-left(style='width: 1000px;')
+                table#schoolsTable.table.table-striped
+                    thead
+                        tr(style='font-size:0.9rem;')
+                            th
+                                input#checkAllSchools(type="checkbox")
+                            th ID
+                            th School Name
+                            th Place
+                            th Price
+                            th Acco.
+                            th Airport
+                            th H.Ins.
+                            th -
+        script(src="/javascripts/panel.js")

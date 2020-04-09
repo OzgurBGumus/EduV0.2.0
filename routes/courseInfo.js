@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
+
+const image2base64 = require('image-to-base64');
 //Models
 const School = require('../models/Course');
 const Program = require('../models/Program');
 const LReservation = require('../models/LReservation');
+const Country = require('../models/Country');
+const State = require('../models/State');
+const City = require('../models/City');
 /// FOR NOW ADD NEW COURSE WITH THIS JS
 
 router.get('/course/new', function(req,res,next){
@@ -55,12 +60,232 @@ router.get('/createProgram/new', function(req,res,next){
         res.json(data);
     });
 });
+
+router.get('/country/new', function(req,res,next){
+  Country.find({}, (err, countries)=>{
+    var i = 0;
+    for(i=0;i<countries.length;i++){
+      if(countries[i].id != i){
+        break;
+      }
+    }
+    const country = new Country({
+      id: i,
+      country: req.query.country,
+      });
+
+    country.save((err, data)=>{
+      if (err)
+          console.log(err);
+
+      res.send(data);
+  });
+  });
+});
+router.put('/add/state', function(req,res,next){
+  State.find({}, (err, states)=>{
+    var i = 0;
+    for(i=0;i<states.length;i++){
+      if(states[i].id != i){
+        break;
+      }
+    }
+    const state = new State({
+      id: i,
+      countryId: req.query.countryId,
+      state: req.query.name,
+      });
+
+    state.save((err, data)=>{
+      if (err)
+          console.log(err);
+      console.log(data);
+      res.send(data);
+  });
+  });
+});
+router.put('/add/city', function(req,res,next){
+  City.find({}, (err, citys)=>{
+    var i = 0;
+    for(i=0;i<citys.length;i++){
+      if(citys[i].id != i){
+        break;
+      }
+    }
+    const city = new City({
+      id: i,
+      stateId: req.query.stateId,
+      city: req.query.name,
+      });
+
+    city.save((err, data)=>{
+      if (err)
+          console.log(err);
+      console.log(data);
+      res.send(data);
+  });
+  });
+});
+
+router.get('/country/all', function(req,res,next){
+  Country.find({}, (err,data)=>{
+    res.send(data);
+  });
+});
+router.get('/country/id', function(req,res,next){
+  var id = req.query.id;
+  Country.findOne({id}, (err,data)=>{
+    res.send(data);
+  });
+});
+router.get('/state/id', function(req,res,next){
+  var id = req.query.id;
+  State.findOne({id}, (err,data)=>{
+    console.log('data::::::::::::::::::::::::::::::::::::::::::', data);
+    res.send(data);
+  });
+});
+router.get('/city/id', function(req,res,next){
+  var id = req.query.id;
+  City.findOne({id}, (err,data)=>{
+    console.log('data::::::::::::::::::::::::::::::::::::::::::', data);
+    res.send(data);
+  });
+});
+router.get('/state/find', function(req,res,next){
+  var countryId = req.query.countryId;
+  State.find({countryId}, (err,data)=>{
+    console.log('STATE===============================================', data);
+    res.send(data);
+  });
+});
+router.get('/city/find', function(req,res,next){
+  var stateId = req.query.stateId;
+  City.find({stateId}, (err,data)=>{
+    console.log('CITY===============================================', data);
+    res.send(data);
+  });
+});
+router.put('/country/changeName', function(req,res,next){
+  var id = req.query.id;
+  var changedName = req.query.changedName;
+  Country.findOneAndUpdate({id}, {country:changedName}, function(err, doc){
+    if(err){
+      console.log('/countr/name/id-->findOneAndUpdate Error:' + err);
+    }
+    else{
+      console.log('/countr/name/id-->findOneAndUpdate Done.');
+    }
+  });
+  res.send(changedName);
+});
+router.put('/state/changeName', function(req,res,next){
+  var id = req.query.id;
+  var changedName = req.query.changedName;
+  State.findOneAndUpdate({id}, {state:changedName}, function(err, doc){
+    if(err){
+      console.log('/state/name/id-->findOneAndUpdate Error:' + err);
+    }
+    else{
+      console.log('/state/name/id-->findOneAndUpdate Done.');
+    }
+  });
+  res.send(changedName);
+});
+router.put('/city/changeName', function(req,res,next){
+  var id = req.query.id;
+  var changedName = req.query.changedName;
+  City.findOneAndUpdate({id}, {city:changedName}, function(err, doc){
+    if(err){
+      console.log('/city/name/id-->findOneAndUpdate Error:' + err);
+    }
+    else{
+      console.log('/city/name/id-->findOneAndUpdate Done.');
+      console.log(id, changedName);
+    }
+  });
+  res.send(changedName);
+});
+router.delete('/city/delete', function(req,res,next){
+  var id = req.query.id;
+  City.findOneAndDelete({id}, (data)=>{
+    if(!data){
+      console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+      res.send('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+    }
+    else{
+      res.send('///////////////////////////////////////////////////////  Data is not Found: '+ req.query.id);
+    }
+  });
+
+});
+router.delete('/state/delete', function(req,res,next){
+  var id=req.query.id;
+  City.deleteMany({'stateId':id} , (err, data)=>{
+    if(err){
+      console.log('/state/Delete ==>City.deleteMany ERROR: : :  '+err);
+    }
+    else{
+      console.log('/state/Delete ==> City.deleteMany SUCCESS');
+    }
+  });
+  State.findOneAndDelete({id}, (data)=>{
+    if(!data){
+      console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+      res.send('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+    }
+    else{
+      res.send('///////////////////////////////////////////////////////  Data is not Found: '+ req.query.id);
+    }
+  });
+});
+
+router.delete('/country/delete', function(req,res,next){
+  var id=req.query.id;
+  State.find({'countryId':id}, (err, data)=>{
+    if(err){
+      res.send('/country/delete => State.find ERROR : : : : '+err);
+    }
+    else{
+      data.forEach(element => {
+        City.deleteMany({'stateId':element.id} , (err, data)=>{
+          if(err){
+            console.log('/city/Delete ==>City.deleteMany ERROR: : :  '+err);
+          }
+          else{
+            console.log('/city/Delete ==> City.deleteMany SUCCESS');
+          }
+        });
+      });
+    }
+  });
+  State.deleteMany({'countryId':id} , (err, data)=>{
+    if(err){
+      console.log('/country/Delete ==>State.deleteMany ERROR: : :  '+err);
+    }
+    else{
+      console.log('/country/Delete ==> State.deleteMany SUCCESS');
+    }
+  });
+
+  Country.findOneAndDelete({id}, (data)=>{
+    if(!data){
+      console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+      res.send('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+    }
+    else{
+      res.send('///////////////////////////////////////////////////////  Data is not Found: '+ req.query.id);
+    }
+  });
+});
+
+
 router.get('/findSchool/id', function(req,res,next){
   var id = req.query.id;
   School.find({'courseId': id}, (err, school)=>{
     res.send(school[0]);
   })
-})
+});
 router.get('/course/:schoolName', function(req, res, next){
   const {schoolName} = req.params;
   if(schoolName == 'all'){
@@ -73,7 +298,7 @@ router.get('/course/:schoolName', function(req, res, next){
       res.send(data[0]);
     });
   }
-})
+});
 
 router.get('/program/:name', function(req, res, next){
   const {name} = req.params;
@@ -88,6 +313,7 @@ router.get('/program/:name', function(req, res, next){
     });
   }
 })
+
 router.get('/programCourseId/:courseid', function(req, res, next){
   const {courseid} = req.params;
   if(courseid == 'all'){
@@ -199,6 +425,7 @@ router.get('/FilterInCoursePage/:time/:program', function(req, res, next) {
       console.log(data);
     });
 });
+
 router.get('/FilterInCoursePage/:time/:program/:hours', function(req, res, next) {
   const {time, program, hours} = req.params;
   console.log('----------------------------------------------------------------------------------------'+time, program);
@@ -206,6 +433,7 @@ router.get('/FilterInCoursePage/:time/:program/:hours', function(req, res, next)
     res.send(data);
   });
 });
+
 router.get('/confirm/:cName/:cTime/:cWeek', function(req,res,next){
   const {cName, cTime, cWeek} = req.params;
   var ncName = '';
@@ -381,10 +609,24 @@ router.get('/reservation/getPdf', function(req,res,next){
     });
   });
 });
+
 router.get('/reservation/getDetails', function(req,res,next){
+  console.log('here------------------------------');
   var reservationId = req.query.reservationId;
   LReservation.find({'reservationId': reservationId}, (err, reservation)=>{
-    res.send(reservation[0]);
+    image2base64("./public/images/logos/eduvizyon.png") // you can also to use url
+    .then(
+        (response) => {
+            console.log(response) //cGF0aC90by9maWxlLmpwZw==
+            res.send([reservation[0], response]);
+        }
+    )
+    .catch(
+        (error) => {
+            console.log(error); //Exepection error....
+        }
+    );
   });
 });
+
 module.exports = router;

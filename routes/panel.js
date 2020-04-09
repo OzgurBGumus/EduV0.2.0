@@ -6,6 +6,7 @@ const Course = require('../models/Course');
 const Program = require('../models/Program');
 const User = require('../models/User');
 
+
 router.get('/login', function(req,res,next){
   res.render('panelLogin', {title:'Panel Login'});
 })
@@ -37,9 +38,16 @@ router.get('/login/verify', function(req, res, next) {
             username
           };
           const token = jwt.sign(payload, req.app.get('api_secret_key'), {
-            expiresIn:2
+            expiresIn:5*60//5 Minutes
           });
-          res.send(token);
+          User.findOneAndUpdate({username:username},{token:token}, function(err, doc){
+            if(err){
+                console.log("Something wrong when updating data!");
+            }
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Done!');
+          });
+          req.session.token = token;
+          res.send(username);
         }
       });
     }
@@ -54,6 +62,7 @@ router.get('/login/ExampleUserRegister', function (req,res,next){
   bcrypt.hash(password,10).then((hash)=>{
     const USER = new User({
       username,
+      token:"",
       password:hash
     });
     const promise = USER.save();
@@ -66,7 +75,26 @@ router.get('/login/ExampleUserRegister', function (req,res,next){
 });
 
 router.get('/in', function(req,res,next){
-  res.render('panel', {title:'Inside Panel'});
+  token=req.session.token;
+  User.findOne({
+    token,
+  }, (err, data)=>{
+    if(err){
+      throw err;
+    }
+    else if(!data){
+      console.log('!!!!!!!!!!!!!!!!something wrong:: data is not found /in->User.findOne(token)');
+      res.send('data is not found./');
+    }
+    else{
+      const username = data.username;
+      console.log('ppppppppppppppppppppppppppppppppppp' + username);
+      res.render('panel', {title:'Inside Panel', username:username});
+    }
+  });
+  //token = req.cookies.token;
+  //res.cookie('token', token, {expires: new Date(Date.now() + 30*100000)});
+  
 });
 
   module.exports = router;
