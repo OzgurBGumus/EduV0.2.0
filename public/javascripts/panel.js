@@ -1,24 +1,8 @@
 $(document).ready(function(){
+
     $('#showSchools').on('click', function(){
-        $('#content').css('pointer-events', 'none');
-        $('#content').css('opacity', '0.4');
-        var Schools = [];
-        $.ajax({
-            url:'/course/all',
-            method: 'GET',
-            success: (school)=>{
-                closeCountriesTab();
-                $('#content').css('pointer-events', 'auto');
-                $('#content').css('opacity', '1');
-                closeSchoolsTab();
-                openSchoolsTab();
-                clearSchoolList();
-                Schools = school;
-                Schools.forEach(school => {
-                    addSchoolToSchoolList(school);
-                });
-            }
-        })
+        closeAllTabs();
+        openSchoolsTab();
     });
     $('#showCountries').on('click', function(){
         $('#content').css('pointer-events', 'none');
@@ -27,8 +11,7 @@ $(document).ready(function(){
             url:'/country/all',
             method: 'GET',
             success: (data)=>{
-                closeSchoolsTab();
-                closeCountriesTab();
+                closeAllTabs();
                 $('#content').css('pointer-events', 'auto');
                 $('#content').css('opacity', '1');
                 openCountriesTab();
@@ -60,10 +43,8 @@ $(document).ready(function(){
                     selectedCountry = $('#countryListSelect option').eq(selectedCountry).val();
                     console.log(selectedCountry);
                     $('#deleteCountry').on('click', ()=>{
-                        console.log('here1');
                         if($('#CountryListSelect').val() != ''){
                             contentDisable();
-                            console.log('here2');
                             deleteCountry(selectedCountry, ()=>{
                                 $('#sucessInfoChangeCountryName').remove();
                                 $('#newCountryBox').append('<div class="text-success info" id="sucessInfoChangeCountryName">Country Silindi...</div>');
@@ -240,21 +221,158 @@ $(document).ready(function(){
         });
         closeSchoolsTab();
     });
+    $('#showLanguages').on('click', function(){
+        closeAllTabs();
+        openLanguagesTab();
+    });
 });
 
 
+
+
+function closeAllTabs(){
+    closeCountriesTab();
+    closeSchoolsTab();
+    closeLanguagesTab();
+}
+
+function callback(func1, func2){
+    func1();
+    func2();
+}
+
+
+/////////////////SCHOOL PAGE
 function openSchoolsTab(){
     newContent =
-    '<table class="table table-striped" id="schoolsTable"> <thead> <tr style="font-size:0.9rem;"> <th> <input id="checkAllSchools" type="checkbox" /> </th> <th>ID</th> <th>School Name</th> <th>Place</th> <th>Price</th> <th>Acco.</th> <th>Airport</th> <th>H.Ins.</th> <th>-</th> </tr> </thead> </table>'
+    '<div id="schoolsTabDiv"><button type="button" class="btn btn-warning btn-lg mb-3" data-toggle="modal" data-target="#createSchoolModal"> Yeni Okul Ekle </button> <div class="modal fade" id="createSchoolModal" tabindex="-1" role="dialog" aria-labelledby="createSchoolHeader" aria-hidden="true"> <div class="modal-dialog modal-lg " role="document"> <div class="modal-content"> <div class="modal-header"> <h5 class="modal-title" id="createSchoolHeader">Yeni Okul Ekle</h5> <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button> </div> <div class="modal-body"> <form id="createSchoolForm" action="" method="POST" enctype="multipart/form-data"> <div> <span class="font-weight-bold" style="width:250px;"">School Name:</span><input class="form-control d-inline-block" type="text" id="createSchoolName" /> </div> <div> <span class="font-weight-bold" style="width:250px;"">HTTP-Adress:</span><input class="form-control d-inline-block" type="text" id="createSchoolHttp" /> </div><div> <span class="font-weight-bold" style="width:250px;"">School Description:</span><input class="form-control d-inline-block" type="text" id="createSchoolDescription" /> </div> <div> <span class="font-weight-bold" style="width:250px;"">Language:</span><select class="form-control d-inline-block" id="createSchoolLanguage" /></select> </div> <div> <span class="font-weight-bold" style="width:250px;"">Country:</span><select class="form-control d-inline-block" id="createSchoolCountry" /></select> </div> <div> <span class="font-weight-bold" style="width:250px;"">State:</span><select class="form-control d-inline-block" id="createSchoolState" /></select> </div> <div> <span class="font-weight-bold" style="width:250px;"">City:</span><select class="form-control d-inline-block" id="createSchoolCity" /></select> </div><div> <span class="font-weight-bold" style="width:250px;"">Adress:</span><input type="text" class="form-control d-inline-block" id="createSchoolAdress" /></input> </div><div> <span class="font-weight-bold" style="width:250px;"">Phone:</span><input type="text" class="form-control d-inline-block" id="createSchoolPhone" /></input> </div> <div> <span class="font-weight-bold" style="width:250px;"">Accommodation:</span><select class="form-control d-inline-block" id="createSchoolAccommodation" /></select> </div> <div> <span class="font-weight-bold" style="width:250px;"">Airport Pickup:</span><select class="form-control d-inline-block" id="createSchoolAirport" /></select> </div> <div> <span class="font-weight-bold" style="width:250px;"">Health Insurance:</span><select class="form-control d-inline-block" id="createSchoolhInsurance" /> </select> </div><div class="form-group"> <label for="example-input-file"> </label> <input type="file" name="multi-files" multiple id="input-multi-files" class="form-control-file border"/></div></form> <div class="preview-images"></div>  </div> <button id="newImageButton" style="width:50px;" class="btn btn-secondary mx-3 mb-3 d-inline-block">+</button> <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> <button type="button" class="btn btn-primary" id="createSchoolSave">Save changes</button> </div> </div> </div> </div><table class="table table-striped" id="schoolsTable"> <thead> <tr style="font-size:0.9rem;"> <th> <input id="checkAllSchools" type="checkbox" /> </th> <th>ID</th> <th>School Name</th> <th>Place</th> <th>Price</th> <th>Acco.</th> <th>Airport</th> <th>H.Ins.</th> <th>-</th> </tr> </thead> </table></div>'
     $('#content').append(newContent);
+    $('#createSchoolAirport').append('<option value="0">No</option> <option value="1">Yes</option>');
+    $('#createSchoolAccommodation').append('<option value="0">No</option> <option value="1">Yes</option>');
+    $('#createSchoolhInsurance').append('<option value="0">No</option> <option value="1">Yes</option>');
+    $('#createSchoolDiscount').append('<option value="0">No</option> <option value="1">Yes</option>');
+    refreshSchoolList();
+
+    let imagesPreview = function(input, placeToInsertImagePreview) {
+        if (input.files) {
+          let filesAmount = input.files.length;
+          for (i = 0; i < filesAmount; i++) {
+            let reader = new FileReader();
+            reader.onload = function(event) {
+              $($.parseHTML("<img style='width:200px;'>"))
+                .attr("src", event.target.result)
+                .appendTo(placeToInsertImagePreview);
+            };
+            reader.readAsDataURL(input.files[i]);
+          }
+        }
+    };
+    $("#input-multi-files").on("change", function() {
+        imagesPreview(this, "div.preview-images");
+    });
+
+
+
+
+    $('#createSchoolAirport').on('change', function(){
+        if($('#createSchoolAirport').val() == '1'){
+            $('<div id="createSchoolAirportPriceBox"><span class="text-lg font-weight-bold mr-4">Price($)</span><input type="Number" id="createSchoolAirportPrice" class="d-inline-block form-control mt-1 mb-2" style="width:auto;"></div>').insertAfter($('#createSchoolAirport'));
+        }
+        else{
+            $('#createSchoolAirportPriceBox').remove();
+        }
+    });
+    $('#createSchoolhInsurance').on('change', function(){
+        if($('#createSchoolhInsurance').val() == '1'){
+            $('<div id="createSchoolhInsurancePriceBox"><span class="text-lg font-weight-bold mr-4">Price($)</span><input type="Number" id="createSchoolhInsurancePrice" class="d-inline-block form-control mt-1 mb-2" style="width:auto;"></div>').insertAfter($('#createSchoolhInsurance'));
+        }
+        else{
+            $('#createSchoolhInsurancePriceBox').remove();
+        }
+    });
+    $('#createSchoolAccommodation').on('change', function(){
+        if($('#createSchoolAccommodation').val() == '1'){
+            $('<div id="createSchoolAccommodationPriceBox"><span class="text-lg font-weight-bold mr-4">Price($)</span><input type="Number" id="createSchoolAccommodationPrice" class="d-inline-block form-control mt-1 mb-2" style="width:auto;"></div>').insertAfter($('#createSchoolAccommodation'));
+        }
+        else{
+            $('#createSchoolAccommodationPriceBox').remove();
+        }
+    });
+    $('#createSchoolDiscount').on('change', function(){
+        if($('#createSchoolDiscount').val() == '1'){
+            $('<div id="createSchoolDiscountPriceBox"><span class="text-lg font-weight-bold mr-4">Discount(%)</span><input type="Number" id="createSchoolDiscountPrice" class="d-inline-block form-control mt-1 mb-2" style="width:auto;"></div>').insertAfter($('#createSchoolDiscount'));
+        }
+        else{
+            $('#createSchoolDiscountPriceBox').remove();
+        }
+    });
+    $('#createSchoolSave').on('click', function(){
+        const createSchoolName = $('#createSchoolName').val();
+        const createSchoolHttp = $('#createSchoolHttp').val();
+        const createSchoolDescription = $('#createSchoolDescription').val();
+        const createSchoolLanguage = $('#createSchoolLanguage').val();
+        const createSchoolCountry = $('#createSchoolCountry').val();
+        const createSchoolState = $('#createSchoolState').val();
+        const createSchoolCity = $('#createSchoolCity').val();
+        const createSchoolAdress = $('#createSchoolAdress').val();
+        const createSchoolPhone = $('#createSchoolPhone').val();
+        const createSchoolAccommodation = $('#createSchoolAccommodation').val();
+        const createSchoolAccommodationPrice = $('#createSchoolAccommodationPrice').val();
+        const createSchoolAirport = $('#createSchoolAirport').val();
+        const createSchoolAirportPrice = $('#createSchoolAirportPrice').val();
+        const createSchoolhInsurance = $('#createSchoolhInsurance').val();
+        const createSchoolhInsurancePrice = $('#createSchoolhInsurancePrice').val();
+        $('#createSchoolForm').attr('action', '/panel/multiple-upload?name='+createSchoolName+'&http='+createSchoolHttp+'&description='+createSchoolDescription+'&language='+createSchoolLanguage+'&country='+createSchoolCountry+'&state='+createSchoolState+'&city='+createSchoolCity+'&adress='+createSchoolAdress+'&phone='+createSchoolPhone+'&accommodation='+createSchoolAccommodation+'&accommodationPrice='+createSchoolAccommodationPrice+'&airport='+createSchoolAirport+'&airportPrice='+createSchoolAirportPrice+'&hInsurance='+createSchoolhInsurance+'&hInsurancePrice='+createSchoolhInsurancePrice);
+        $('#createSchoolForm').submit();
+    })
+    findCountryAll((countries)=>{
+        findStateAll(countries[0].id, (states)=>{
+            for(i=0;i<states.length;i++){
+                $('#createSchoolState').append('<option value="'+states[i].id+'">'+states[i].state+'</option>');
+            }
+            findCityAll(states[0].id, (cities)=>{
+                for(i=0;i<cities.length;i++){
+                    $('#createSchoolCity').append('<option value="'+cities[i].id+'">'+cities[i].city+'</option>');
+                }
+            })
+        })
+        for(i=0;i<countries.length;i++){
+            $('#createSchoolCountry').append('<option value="'+countries[i].id+'">'+countries[i].country+'</option>');
+        }
+    });
+    findLanguageAll((languages)=>{
+        for(i=0;i<languages.length;i++){
+            $('#createSchoolLanguage').append('<option value="'+languages[i].id+'">'+languages[i].language+'</option>');
+        }
+    })
+    contentEnable();
+
+
 }
 function closeSchoolsTab(){
-    $('#schoolsTable').remove();
+    $('#schoolsTabDiv').remove();
 }
 function addSchoolToSchoolList(school){
     newLine =
-    '<tr style="font-size:0.9rem;" class="schoolTr"> <td class="text-center" style="width:15px;"> <input id="checkAllSchools" type="checkbox" /> </td> <td class="text-center" style="width:35px; overflow: hidden;">'+school.courseId+'</td> <td>'+school.name+'</td> <td>'+school.country+' '+school.state+' '+school.city+'</td> <td>0</td> <td>'+school.accommodationPrice+'</td> <td>'+school.airportPrice+'</td> <td>'+school.hInsurancePrice+'</td> <td style="width:150px;"> <button class="btn btn-primary btn-sm py-0 px-1" id="schoolDetailsButton" value="'+school.courseId+'" style="font-size:0.8rem; margin-right: 10px;"> Details</button> <button class="btn btn-danger btn-sm py-0 px-1" id="schoolDeleteButton" value="'+school.courseId+' style="font-size:0.8rem;"> Delete</button> </td> </tr>'
+    '<tr style="font-size:0.9rem;" class="schoolTr"> <td class="text-center" style="width:15px;"> <input id="checkAllSchools" type="checkbox" /> </td> <td class="text-center" style="width:35px; overflow: hidden;">'+school.courseId+'</td> <td>'+school.name+'</td> <td>'+school.country+' '+school.state+' '+school.city+'</td> <td>0</td> <td>'+school.accommodationPrice+'</td> <td>'+school.airportPrice+'</td> <td>'+school.hInsurancePrice+'</td> <td style="width:150px;"> <button class="btn btn-primary btn-sm py-0 px-1 schoolDetailsButton" id="" value="'+school.courseId+'" style="font-size:0.8rem; margin-right: 10px; "> Details</button> <button class="btn btn-danger btn-sm py-0 px-1 schoolDeleteButton" id="" value="'+school.courseId+' style="font-size:0.8rem;"> Delete</button> </td> </tr>'
     $('#schoolsTable').append(newLine);
+}
+function refreshSchoolList(){
+    var Schools = [];
+    contentDisable();
+        $.ajax({
+            url:'/course/all',
+            method: 'GET',
+            success: (school)=>{
+                contentEnable();
+                clearSchoolList();
+                Schools = school;
+                Schools.forEach(school => {
+                    addSchoolToSchoolList(school);
+                });
+                contentEnable();
+            }
+        })
 }
 function clearSchoolList(){
     $('.schoolTr').remove();
@@ -384,6 +502,39 @@ function findCityById(id, callback){
         console.log('fail: '+data);
     });
 }
+function findCountryAll(callback){
+    $.ajax({
+        url:'/country/all',
+        method: 'GET',
+        success: (data)=>{
+            callback(data);
+        }
+    }).fail((data)=>{
+        console.log('findCountryAll Failed::::'+data);
+    });
+}
+function findStateAll(countryId, callback){
+    $.ajax({
+        url:'/state/find?countryId='+countryId,
+        method: 'GET',
+        success: (data)=>{
+            callback(data);
+        }
+    }).fail((data)=>{
+        console.log('findStateAll Failed::::'+data);
+    });
+}
+function findCityAll(stateId, callback){
+    $.ajax({
+        url:'/city/find?stateId='+stateId,
+        method: 'GET',
+        success: (data)=>{
+            callback(data);
+        }
+    }).fail((data)=>{
+        console.log('findStateAll Failed::::'+data);
+    });
+}
 
 function reNameCountryName(id, changedName, callback){
     $.ajax({
@@ -450,5 +601,131 @@ function deleteCountry(id, callback){
         }
     }).fail((data)=>{
         console.log('fail: '+data);
+    });
+}
+
+/////////////////LANGUAGE PAGE
+function openLanguagesTab(){
+    newContent =
+    '<div id="LanguagesTabDiv"><div id="newLanguageBox"><input type="text" style="width:200px;" id="newLanguageName" class="form-control d-inline-block m-4"><button id="newLanguageButton" class="btn btn-primary">Yeni Dil Kaydet</button></div><table class="table table-striped" id="languagesTable"> <thead> <tr style="font-size:0.9rem;"> <th> <input id="checkAllLanguages" type="checkbox" /> </th> <th>ID</th> <th>Language</th> <th>-</th> </tr> </thead> </table></div>'
+    $('#content').append(newContent);
+    refreshLanguageList();
+    $('#newLanguageButton').on('click', function(){
+        $('#sucessInfoChangeLanguageName').remove();
+        if($('#newLanguageName').val() != ''){
+            $.ajax({
+                url:'/add/language?language='+$('#newLanguageName').val(),
+                method: 'PUT',
+                success: (data)=>{
+                    $('#newLanguageBox').append('<div class="text-success info" id="sucessInfoChangeLanguageName">Kayıt Oluşturuldu.</div>');
+                    refreshLanguageList();
+                    $('#newLanguageName').val('');
+                }
+            }).fail((data)=>{
+                console.log('fail: '+data);
+            });
+        }
+        else{
+            $('#newLanguageBox').append('<div class="text-danger info" id="sucessInfoChangeLanguageName">Alan Boş.</div>');
+        }
+    });
+};
+
+function closeLanguagesTab(){
+    $('#LanguagesTabDiv').remove();
+    
+}
+function addLanguageToLanguageList(language){
+    newLine =
+    '<tr style="font-size:0.9rem;" class="languageTr"> <td class="text-center" style="width:15px;"> <input id="checkAllLanguages" type="checkbox" /> </td> <td class="text-center" style="width:35px; overflow: hidden;">'+language.id+'</td> <td id="languageNameTd'+language.id+'">'+language.language+'</td><td style="width:200px; id="languageExtraBox'+language.id+'"> <button class="btn btn-primary btn-sm py-0 px-1 languageDetailsButton" id="editLanguage'+language.id+'" value="" style="font-size:0.8rem; margin-right: 10px;"> Change Name</button> <button class="btn btn-danger btn-sm py-0 px-1 languageDeleteButton" id="deleteLanguage'+language.id+'" style="font-size:0.8rem;"> Delete</button> </td> </tr>'
+    $('#languagesTable').append(newLine);
+    $('#editLanguage'+language.id).on('click', function(){
+        selectedLanguageName = $("#languageNameTd"+language.id).text();
+        $("#languageNameTd"+language.id).empty();
+        $("#languageNameTd"+language.id).append('<input type="text" id="changeLanguageNameText'+language.id+'" class="form-control-sm mr-2" value="'+selectedLanguageName+'">');
+        $("#languageNameTd"+language.id).append('<button id="changeLanguageNameButton'+language.id+'" class="btn btn-sm btn-success mx-2">Kaydet</button>');
+        $("#languageNameTd"+language.id).append('<button id="cancelLanguageNameButton'+language.id+'" class="btn btn-sm btn-warning">Iptal</button>');
+        $('#editLanguage'+language.id).hide();
+        $('#changeLanguageNameButton'+language.id).on('click', function(){
+            $('#sucessInfoChangeLanguageName').remove();
+            if($('#changeLanguageNameText'+language.id).val() != ''){
+                reNameLanguageName(language.id, $('#changeLanguageNameText'+language.id).val(), ()=>{
+                    $('#newLanguageBox').append('<div class="alert alert-success" id="sucessInfoChangeLanguageName">Isim Degistirildi...</div>');
+                    $('#changeLanguageNameButton'+language.id).remove();
+                    $('#cancelLanguageNameButton'+language.id).remove();
+                    $('#editLanguage'+language.id).show();
+                    refreshLanguageList();
+                });
+            }
+            else{
+                $('#newLanguageBox').append('<div class="alert alert-danger" id="sucessInfoChangeLanguageName">Alan Boş Birakilamaz...</div>');
+            }
+        });
+        $('#cancelLanguageNameButton'+language.id).on('click', function(){
+            $('#changeLanguageNameButton'+language.id).remove();
+            $('#cancelLanguageNameButton'+language.id).remove();
+            $('#editLanguage'+language.id).show();
+            refreshLanguageList();
+        });
+    });
+    $('#deleteLanguage'+language.id).on('click', function(){
+        deleteLanguage(language.id, ()=>{
+            $('#sucessInfoChangeLanguageName').remove();
+            $('#newLanguageBox').append('<div class="alert alert-success" id="sucessInfoChangeLanguageName">Dil Silindi...</div>');
+            refreshLanguageList();
+        });
+    });
+}
+function refreshLanguageList(){
+    var Languages = [];
+    contentDisable();
+        $.ajax({
+            url:'/language/all',
+            method: 'GET',
+            success: (language)=>{
+                contentEnable();
+                clearLanguageList();
+                Languages = language;
+                Languages.forEach(language => {
+                    addLanguageToLanguageList(language);
+                });
+                contentEnable();
+            }
+        })
+}
+function clearLanguageList(){
+    $('.languageTr').remove();
+}
+function reNameLanguageName(id, changedName, callback){
+    $.ajax({
+        url:'/language/changeName?id='+id+'&changedName='+changedName,
+        method: 'PUT',
+        success: (data)=>{
+            callback();
+        }
+    }).fail((data)=>{
+        console.log('fail: '+data);
+    });
+}
+function deleteLanguage(id, callback){
+    $.ajax({
+        url:'/language/delete?id='+id,
+        method: 'DELETE',
+        success: (data)=>{
+            callback();
+        }
+    }).fail((data)=>{
+        console.log('fail: '+data);
+    });
+}
+function findLanguageAll(callback){
+    $.ajax({
+        url:'/language/all',
+        method: 'GET',
+        success: (data)=>{
+            callback(data);
+        }
+    }).fail((data)=>{
+        console.log('findCountryAll Failed::::'+data);
     });
 }

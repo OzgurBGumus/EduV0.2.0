@@ -6,7 +6,6 @@ const Course = require('../models/Course');
 const Program = require('../models/Program');
 const User = require('../models/User');
 
-
 router.get('/login', function(req,res,next){
   res.render('panelLogin', {title:'Panel Login'});
 })

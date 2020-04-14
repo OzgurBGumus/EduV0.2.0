@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 const image2base64 = require('image-to-base64');
+var busboy = require('connect-busboy'); //middleware for form/file upload
+var path = require('path');     //used for file path
+var fs = require('fs-extra');   //File System - for file manipulation
+const uploadController = require("../controllers/upload");
+router.use(busboy());
+
 //Models
 const School = require('../models/Course');
 const Program = require('../models/Program');
@@ -9,31 +15,9 @@ const LReservation = require('../models/LReservation');
 const Country = require('../models/Country');
 const State = require('../models/State');
 const City = require('../models/City');
-/// FOR NOW ADD NEW COURSE WITH THIS JS
+const Language = require('../models/Language');
 
-router.get('/course/new', function(req,res,next){
-    const school = new School({
-        courseId: 1,
-        courseImg: '/images/homePage-Course5.png',
-        name: 'School A',
-        country: 'Usa',
-        time: true,
-        startDateYear: 2020,
-        startDateMonth: 09,
-        startDateDay: 01,
-        duration: 4,
-        Accommodation: "yes",
-        Airport: "yes",
-        HInsurance: "yes"
-    });
 
-    school.save((err, data)=>{
-        if (err)
-            console.log(err);
-
-        res.json(data);
-    });
-});
 
 router.get('/createProgram/new', function(req,res,next){
     const program = new Program({
@@ -126,9 +110,41 @@ router.put('/add/city', function(req,res,next){
   });
   });
 });
+router.put('/add/language', function(req,res,next){
+  Language.find({}, (err, languages)=>{
+    var i = 0;
+    for(i=0;i<languages.length;i++){
+      if(languages[i].id != i){
+        break;
+      }
+    }
+    const language = new Language({
+      id: i,
+      language: req.query.language,
+      });
+
+    language.save((err, data)=>{
+      if (err)
+          console.log(err);
+      console.log(data);
+      res.send(data);
+  });
+  });
+});
+
 
 router.get('/country/all', function(req,res,next){
   Country.find({}, (err,data)=>{
+    res.send(data);
+  });
+});
+router.get('/language/all', function(req,res,next){
+  Language.find({}, (err,data)=>{
+    res.send(data);
+  });
+});
+router.get('/language/all', function(req,res,next){
+  Language.find({}, (err,data)=>{
     res.send(data);
   });
 });
@@ -206,6 +222,19 @@ router.put('/city/changeName', function(req,res,next){
   });
   res.send(changedName);
 });
+router.put('/language/changeName', function(req,res,next){
+  var id = req.query.id;
+  var changedName = req.query.changedName;
+  Language.findOneAndUpdate({id}, {language:changedName}, function(err, doc){
+    if(err){
+      console.log('/language/changeName-->findOneAndUpdate Error:' + err);
+    }
+    else{
+      console.log('/language/changeName-->findOneAndUpdate Done.');
+    }
+  });
+  res.send(changedName);
+});
 router.delete('/city/delete', function(req,res,next){
   var id = req.query.id;
   City.findOneAndDelete({id}, (data)=>{
@@ -277,6 +306,19 @@ router.delete('/country/delete', function(req,res,next){
       res.send('///////////////////////////////////////////////////////  Data is not Found: '+ req.query.id);
     }
   });
+});
+router.delete('/language/delete', function(req,res,next){
+  var id = req.query.id;
+  Language.findOneAndDelete({id}, (data)=>{
+    if(!data){
+      console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+      res.send('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+    }
+    else{
+      res.send('///////////////////////////////////////////////////////  Data is not Found: '+ req.query.id);
+    }
+  });
+
 });
 
 
@@ -627,6 +669,40 @@ router.get('/reservation/getDetails', function(req,res,next){
         }
     );
   });
+});
+
+router.post("/panel/multiple-upload", function(req, res){
+  uploadController.multipleUpload(req,res);
+  Country.find({}, (err, countries)=>{
+    var i = 0;
+    for(i=0;i<countries.length;i++){
+      if(countries[i].id != i){
+        break;
+      }
+    }
+  });
+  const school = new School({
+    courseId: 1,
+    courseImg: '/images/homePage-Course5.png',
+    name: 'School A',
+    country: 'Usa',
+    time: true,
+    startDateYear: 2020,
+    startDateMonth: 09,
+    startDateDay: 01,
+    duration: 4,
+    Accommodation: "yes",
+    Airport: "yes",
+    HInsurance: "yes"
+});
+
+school.save((err, data)=>{
+    if (err)
+        console.log(err);
+
+    res.json(data);
+});
+
 });
 
 module.exports = router;

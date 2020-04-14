@@ -21,23 +21,12 @@ html(lang="en")
                     |   Schools
                 button#showCountries.btn.btn-secondary.rounded-0.border.p-3(style='width:200px;')
                     |   Countries
+                button#showLanguages.btn.btn-secondary.rounded-0.border.p-3(style='width:200px;')
+                    |   Languages
                 button#showReservations.btn.btn-secondary.rounded-0.border.p-3(style='width:200px;')
                     |   Reservations
                 button#showUsers.btn.btn-secondary.rounded-0.border.p-3(style='width:200px;')
                     |   Users
                 |   User: #{username}
             #content.m-3.d-inline-block.float-left(style='width: 1000px;')
-                table#schoolsTable.table.table-striped
-                    thead
-                        tr(style='font-size:0.9rem;')
-                            th
-                                input#checkAllSchools(type="checkbox")
-                            th ID
-                            th School Name
-                            th Place
-                            th Price
-                            th Acco.
-                            th Airport
-                            th H.Ins.
-                            th -
         script(src="/javascripts/panel.js")
