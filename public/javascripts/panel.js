@@ -270,10 +270,6 @@ function openSchoolsTab(){
     $("#input-multi-files").on("change", function() {
         imagesPreview(this, "div.preview-images");
     });
-
-
-
-
     $('#createSchoolAirport').on('change', function(){
         if($('#createSchoolAirport').val() == '1'){
             $('<div id="createSchoolAirportPriceBox"><span class="text-lg font-weight-bold mr-4">Price($)</span><input type="Number" id="createSchoolAirportPrice" class="d-inline-block form-control mt-1 mb-2" style="width:auto;"></div>').insertAfter($('#createSchoolAirport'));
@@ -296,14 +292,6 @@ function openSchoolsTab(){
         }
         else{
             $('#createSchoolAccommodationPriceBox').remove();
-        }
-    });
-    $('#createSchoolDiscount').on('change', function(){
-        if($('#createSchoolDiscount').val() == '1'){
-            $('<div id="createSchoolDiscountPriceBox"><span class="text-lg font-weight-bold mr-4">Discount(%)</span><input type="Number" id="createSchoolDiscountPrice" class="d-inline-block form-control mt-1 mb-2" style="width:auto;"></div>').insertAfter($('#createSchoolDiscount'));
-        }
-        else{
-            $('#createSchoolDiscountPriceBox').remove();
         }
     });
     $('#createSchoolSave').on('click', function(){
@@ -354,7 +342,7 @@ function closeSchoolsTab(){
 }
 function addSchoolToSchoolList(school){
     newLine =
-    '<tr style="font-size:0.9rem;" class="schoolTr"> <td class="text-center" style="width:15px;"> <input id="checkAllSchools" type="checkbox" /> </td> <td class="text-center" style="width:35px; overflow: hidden;">'+school.courseId+'</td> <td>'+school.name+'</td> <td>'+school.country+' '+school.state+' '+school.city+'</td> <td>0</td> <td>'+school.accommodationPrice+'</td> <td>'+school.airportPrice+'</td> <td>'+school.hInsurancePrice+'</td> <td style="width:150px;"> <button class="btn btn-primary btn-sm py-0 px-1 schoolDetailsButton" id="" value="'+school.courseId+'" style="font-size:0.8rem; margin-right: 10px; "> Details</button> <button class="btn btn-danger btn-sm py-0 px-1 schoolDeleteButton" id="" value="'+school.courseId+' style="font-size:0.8rem;"> Delete</button> </td> </tr>'
+    '<tr style="font-size:0.9rem;" class="schoolTr"> <td class="text-center" style="width:15px;"> <input id="checkAllSchools" type="checkbox" /> </td> <td class="text-center" style="width:35px; overflow: hidden;">'+school.schoolId+'</td> <td>'+school.name+'</td> <td>'+school.country+' '+school.state+' '+school.city+'</td> <td>0</td> <td>'+school.accommodationPrice+'</td> <td>'+school.airportPrice+'</td> <td>'+school.hInsurancePrice+'</td> <td style="width:150px;"> <button class="btn btn-primary btn-sm py-0 px-1 schoolDetailsButton" id="" value="'+school.schoolId+'" style="font-size:0.8rem; margin-right: 10px; "> Details</button> <button class="btn btn-danger btn-sm py-0 px-1 schoolDeleteButton" id="" value="'+school.schoolId+' style="font-size:0.8rem;"> Delete</button> </td> </tr>'
     $('#schoolsTable').append(newLine);
 }
 function refreshSchoolList(){

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Course = require('../models/Course');
+const Course = require('../models/School');
 const Program = require('../models/Program');
 
 /* GET Enter Page. */
@@ -17,14 +17,14 @@ router.get('/homepage', function(req, res, next) {
 
 
 
-router.get('/:courseHtml', function(req,res,next){
-  const {courseHtml} = req.params;
+router.get('/:schoolHttp', function(req,res,next){
+  const {schoolHttp} = req.params;
   console.log('before Find Test');
-  Course.find({'courseHtml' : courseHtml}, (err, courses)=>{
+  Course.find({'schoolHttp' : schoolHttp}, (err, courses)=>{
     console.log('Find Test');
     console.log(courses.length)
     if(courses.length >= 1){
-      Program.find({'courseId' : courses[0].courseId}, (err, programs)=>{
+      Program.find({'schoolId' : courses[0].schoolId}, (err, programs)=>{
         var temp1 =0;
         var temp2 =0;
         var courseTimeList = [];

@@ -19,7 +19,7 @@ $(document).ready(function(){
         success: (data)=>{
             //[0] --> School
             //[1] --> Program
-            schoolId = data[0].courseId;
+            schoolId = data[0].schoolId;
             programId = data[1].programId;
             $('#confirmSchoolName').text(data[0].name);
             $('#confirmLocation').text(data[0].country+' '+data[0].state+' '+data[0].city);

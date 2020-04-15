@@ -52,7 +52,7 @@ $(document).ready(function(){
                         console.log('here?');
                         var found = Schools.find(function(element){
                             console.log(element)
-                            if(element.courseId == discountCardPrograms[temp].courseId)
+                            if(element.schoolId == discountCardPrograms[temp].schoolId)
                                 return element;
                         });
                         discountCardSchools.push(found);
@@ -73,7 +73,7 @@ $(document).ready(function(){
                             coursePlace = coursePlace +", "+ discountCardSchools[i].city;
                         }
                         hotDiscountItem =
-                                '<a class="btn hotDiscountCard p-2 border d-inline-block mx-2" href="/'+Schools[i].courseHtml+'"> <div class="card border-0" style="width: 18rem;"> <div class="position-absolute" style="right:0px;"> <div class="position-relative bg-danger rounded-circle text-white text-center" style="border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px;"><span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;">%'+discountCardPrograms[i].discount+'</span></div> </div><img class="card-img-top" src="'+Schools[i].courseImg+'" alt="..." /> <div class="card-body pb-0"> <h5 class="card-title">'+Schools[i].name+'</h5> </div> <ul class="list-group list-group-flush"> <li class="list-group-item cardDescription" style="height:60px;">Take english courses in the center of the world</li> <li class="list-group-item card-link text-right"><span class="font-weight float-left"><i class="far fa-clock"></i> '+discountCardPrograms[i].hours+' Weeks</span><span class="bg-danger text-white rounded p-1 float-right" style="font-size:0.8rem;">'+coursePlace+'</span></li> </ul> </div> </a>';
+                                '<a class="btn hotDiscountCard p-2 border d-inline-block mx-2" href="/'+Schools[i].schoolHttp+'"> <div class="card border-0" style="width: 18rem;"> <div class="position-absolute" style="right:0px;"> <div class="position-relative bg-danger rounded-circle text-white text-center" style="border: 1px solid white; width:75px; height:75px; right:-30px; top:-30px;"><span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:1.4rem;">%'+discountCardPrograms[i].discount+'</span></div> </div><img class="card-img-top" src="'+Schools[i].courseImg+'" alt="..." /> <div class="card-body pb-0"> <h5 class="card-title">'+Schools[i].name+'</h5> </div> <ul class="list-group list-group-flush"> <li class="list-group-item cardDescription" style="height:60px;">Take english courses in the center of the world</li> <li class="list-group-item card-link text-right"><span class="font-weight float-left"><i class="far fa-clock"></i> '+discountCardPrograms[i].hours+' Weeks</span><span class="bg-danger text-white rounded p-1 float-right" style="font-size:0.8rem;">'+coursePlace+'</span></li> </ul> </div> </a>';
                         $('#hotdiscountsListBox').append(hotDiscountItem);
                         coursePlace = "";
                     }

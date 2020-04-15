@@ -9,7 +9,7 @@ const uploadController = require("../controllers/upload");
 router.use(busboy());
 
 //Models
-const School = require('../models/Course');
+const School = require('../models/School');
 const Program = require('../models/Program');
 const LReservation = require('../models/LReservation');
 const Country = require('../models/Country');
@@ -21,7 +21,7 @@ const Language = require('../models/Language');
 
 router.get('/createProgram/new', function(req,res,next){
     const program = new Program({
-        courseId: 1,
+        schoolId: 1,
         programId: 555,
         name: 'ESL',
         time: 'Morning',
@@ -324,7 +324,7 @@ router.delete('/language/delete', function(req,res,next){
 
 router.get('/findSchool/id', function(req,res,next){
   var id = req.query.id;
-  School.find({'courseId': id}, (err, school)=>{
+  School.find({'schoolId': id}, (err, school)=>{
     res.send(school[0]);
   })
 });
@@ -364,7 +364,7 @@ router.get('/programCourseId/:courseid', function(req, res, next){
     });
   }
   else{
-    Program.find({'courseId':courseid}, (err, data)=>{
+    Program.find({'schoolId':courseid}, (err, data)=>{
       res.send(data);
     });
   }
@@ -492,7 +492,7 @@ router.get('/confirm/:cName/:cTime/:cWeek', function(req,res,next){
     }
   }
   Program.find({'name': ncName, 'time': ncTime, 'hours': ncWeek}, (err, program)=>{
-    School.find({'courseId':program[0].courseId}, (err,  school)=>{
+    School.find({'schoolId':program[0].schoolId}, (err,  school)=>{
       var data = [school[0], program[0]];
       res.send(data);
     });
@@ -550,7 +550,7 @@ router.get('/reservation/getPdf', function(req,res,next){
   for(var i = timeTemp;i<req.query.startDate.length;i++){
       startYear = startYear + req.query.startDate[i];
   }
-  School.find({'courseId': schoolId}, (err, school)=>{
+  School.find({'schoolId': schoolId}, (err, school)=>{
     if(accommodation == '  Yes'){
       Paccommodation = school[0].accommodationPrice;
     }
@@ -672,37 +672,44 @@ router.get('/reservation/getDetails', function(req,res,next){
 });
 
 router.post("/panel/multiple-upload", function(req, res){
-  uploadController.multipleUpload(req,res);
-  Country.find({}, (err, countries)=>{
-    var i = 0;
-    for(i=0;i<countries.length;i++){
-      if(countries[i].id != i){
-        break;
+  const promise = new Promise((resolve, reject)=>{
+    School.find({}, (err, schools)=>{
+      var i = 0;
+      for(i=0;i<schools.length;i++){
+        if(schools[i].schoolId != i){
+          break;
+        }
       }
-    }
+      const school = new School({
+        schoolId: i,
+        schoolHttp: req.query.http,
+        name: req.query.name,
+        description: req.query.description,
+        language: req.query.language,
+        country: req.query.country,
+        state: req.query.state,
+        city: req.query.city,
+        adress: req.query.adress,
+        phone: req.query.phone,
+        accommodation: req.query.accommodation,
+        airport: req.query.airport,
+        hInsurance: req.query.hInsurance,
+        accommodationPrice: req.query.accommodationPrice,
+        airportPrice: req.query.airportPrice,
+        hInsurancePrice: req.query.hInsurancePrice
+      });
+    
+      school.save((err, data)=>{
+        if (err)
+            console.log(err);
+    
+        resolve('done');
+      });
+    });
   });
-  const school = new School({
-    courseId: 1,
-    courseImg: '/images/homePage-Course5.png',
-    name: 'School A',
-    country: 'Usa',
-    time: true,
-    startDateYear: 2020,
-    startDateMonth: 09,
-    startDateDay: 01,
-    duration: 4,
-    Accommodation: "yes",
-    Airport: "yes",
-    HInsurance: "yes"
-});
-
-school.save((err, data)=>{
-    if (err)
-        console.log(err);
-
-    res.json(data);
-});
-
+  promise.then(()=>{
+    uploadController.multipleUpload(req,res);
+  })
 });
 
 module.exports = router;
