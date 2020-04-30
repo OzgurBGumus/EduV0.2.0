@@ -19,7 +19,7 @@
     "fs-extra": "^9.0.0",
     "http-errors": "~1.6.3",
     "image-to-base64": "^2.0.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.0",
     "morgan": "~1.9.1",
