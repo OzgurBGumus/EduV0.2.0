@@ -8,8 +8,7 @@ const multipleUpload = async (req, res) => {
     if (req.files.length <= 0) {
       return res.send(`You must select at least 1 file.`);
     }
-
-    return res.send(`Files has been uploaded.`);
+    return res.render('panel', {title:'Inside Panel'});
   } catch (error) {
     console.log(error);
 

@@ -87,13 +87,23 @@ router.get('/in', function(req,res,next){
     }
     else{
       const username = data.username;
-      console.log('ppppppppppppppppppppppppppppppppppp' + username);
-      res.render('panel', {title:'Inside Panel', username:username});
+      console.log('USER:' + username);
+      res.render('metroicPanel', {title:'Inside Panel', username:username});
     }
   });
   //token = req.cookies.token;
   //res.cookie('token', token, {expires: new Date(Date.now() + 30*100000)});
   
 });
+router.get('/in/schools', function(req,res,next){
+  res.render('metroic-schools');
+});
+router.get('/in/Countries', function(req,res,next){
+  res.render('metroic-countries');
+});
+router.get('/in/Languages', function(req,res,next){
+  res.render('metroic-languages');
+});
+
 
   module.exports = router;

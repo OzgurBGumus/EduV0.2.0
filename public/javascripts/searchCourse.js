@@ -29,6 +29,7 @@ $(document).ready(function(){
     });
 
     $("#moreButton").on('click', function(e){
+        debugger;
         console.log('moreButtonContainer test');
         $('#moreButton').addClass('disabled');
         e.preventDefault();
