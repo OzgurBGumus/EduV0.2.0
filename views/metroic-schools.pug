@@ -36,6 +36,8 @@ head
   link(href='/assets/global/plugins/ladda/ladda-themeless.min.css', rel='stylesheet', type='text/css')
   link(href='/assets/global/plugins/datatables/datatables.min.css' rel='stylesheet' type='text/css')
   link(href='/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css' rel='stylesheet' type='text/css')
+  link(href='/assets/global/plugins/dropzone/dropzone.min.css', rel='stylesheet', type='text/css')
+  link(href='/assets/global/plugins/dropzone/basic.min.css', rel='stylesheet', type='text/css')
   // END PAGE LEVEL PLUGINS
   // BEGIN THEME GLOBAL STYLES
   link#style_components(href='/assets/global/css/components.min.css' rel='stylesheet' type='text/css')
@@ -322,7 +324,6 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
         // BEGIN PAGE TITLE
         h1.page-title
           | Find, Add, Edit or Remove Schools
-          a.mt-sweetalert(data-title='Do you agree to the Terms and Conditions?', data-message='Duis mollis, est non commodo luctus, nisi erat porttitor ligula, mattis consectetur purus sit amet eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.', data-type='info', data-show-confirm-button='true', data-confirm-button-class='btn-success', data-show-cancel-button='true', data-cancel-button-class='btn-default', data-close-on-confirm='false', data-close-on-cancel='false', data-confirm-button-text='Yes, I agree', data-cancel-button-text='No, I disagree', data-popup-title-success='Thank you', data-popup-message-success='You have agreed to our Terms and Conditions', data-popup-title-cancel='Cancelled', data-popup-message-cancel='You have disagreed to our Terms and Conditions') Agree to Terms & Conditions
         // END PAGE TITLE
         // END PAGE HEADER
         .row
@@ -340,6 +341,8 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                       .btn-group
                         a.btn.purple.btn-outline.sbold(data-toggle='modal' href='#large')
                           | Add New
+                        button#refreshListsButton.btn.yellow.ladda-button(data-style="zoom-in" style='margin-left:10px;')
+                          span.ladda-label Refresh
                     #large.modal.fade.bs-modal-lg(tabindex='-1' role='dialog' aria-hidden='true')
                       .modal-dialog.modal-lg
                         .modal-content
@@ -417,6 +420,10 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                                     span.input-group-addon
                                       i.fa.fa-usd
                                     input#addDiscount.form-control.addDiscountBox(type='number' placeholder='Discount Price ($$ USD)')
+                                .col-md-12
+                                  form#imgDropzone.dropzone.dropzone-file-area(action='/find/logo', enctype="multipart/form-data", style='width: 500px; margin-top: 50px;')
+                                    h3.sbold Drop files here or click to upload
+                                    p  This is just a demo dropzone. Selected files are not actually uploaded. 
                             .clearfix
 
                           .modal-footer
@@ -444,7 +451,7 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                             a(href='javascript:;')
                               i.fa.fa-file-excel-o
                               |  Export to Excel
-                table#sample_1.table.table-striped.table-bordered.table-hover.table-checkable.order-column
+                table#schoolsTable.table.table-striped.table-bordered.table-hover.table-checkable.order-column
                   thead
                     tr
                       th
@@ -454,30 +461,9 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                       th  Name 
                       th  Email 
                       th  Status 
-                      th  Country 
+                      th  Place 
                       th  Actions 
                   tbody#schoolTable
-                    tr.odd.gradeX
-                      td
-                        label.mt-checkbox.mt-checkbox-single.mt-checkbox-outline
-                          input.checkboxes(type='checkbox' value='1')
-                          span
-                      td  Kaplan Language Schools 
-                      td
-                        a(href='mailto:shuxer@gmail.com')  Kaplan@info.com 
-                      td
-                        span.label.label-sm.label-success  Approved 
-                      td.center  USA 
-                      td
-                        .btn-group
-                          button.btn.btn-xs.green.dropdown-toggle(type='button' data-toggle='dropdown' aria-expanded='false')
-                            | Actions
-                            i.fa.fa-angle-down
-                          ul.dropdown-menu.pull-left(role='menu')
-                            li
-                              a(href='javascript:;')
-                                i.icon-user
-                                |  Edit
             // END EXAMPLE TABLE PORTLET
       // END CONTENT BODY
     // END CONTENT
@@ -910,7 +896,7 @@ script(src='/assets/global/plugins/datatables/datatables.min.js' type='text/java
 script(src='/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js' type='text/javascript')
 script(src='/assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js', type='text/javascript')
 script(src='/assets/pages/scripts/ui-sweetalert.min.js', type='text/javascript')
-
+script(src='/assets/global/plugins/dropzone/dropzone.min.js', type='text/javascript')
 // END PAGE LEVEL PLUGINS
 // BEGIN THEME GLOBAL SCRIPTS
 script(src='/assets/global/scripts/app.min.js' type='text/javascript')
@@ -919,7 +905,7 @@ script(src='/assets/global/scripts/app.min.js' type='text/javascript')
 script(src='/assets/pages/scripts/table-datatables-managed.min.js' type='text/javascript')
 script(src='/assets/global/plugins/jquery-ui/jquery-ui.min.js' type='text/javascript')
 script(src='/assets/pages/scripts/ui-modals.min.js' type='text/javascript')
-
+script(src='/assets/pages/scripts/form-dropzone.min.js', type='text/javascript')
 // END PAGE LEVEL SCRIPTS
 // BEGIN THEME LAYOUT SCRIPTS
 script(src='/assets/layouts/layout/scripts/layout.min.js' type='text/javascript')

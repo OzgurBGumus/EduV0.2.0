@@ -29,17 +29,23 @@ head
   link(href='/assets/global/plugins/simple-line-icons/simple-line-icons.min.css' rel='stylesheet' type='text/css')
   link(href='/assets/global/plugins/bootstrap/css/bootstrap.min.css' rel='stylesheet' type='text/css')
   link(href='/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css' rel='stylesheet' type='text/css')
+  link(href='/assets/global/plugins/bootstrap-sweetalert/sweetalert.css', rel='stylesheet', type='text/css')
+
   // END GLOBAL MANDATORY STYLES
   // BEGIN PAGE LEVEL PLUGINS
   link(href='/assets/global/plugins/ladda/ladda-themeless.min.css', rel='stylesheet', type='text/css')
   link(href='/assets/global/plugins/datatables/datatables.min.css' rel='stylesheet' type='text/css')
   link(href='/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css' rel='stylesheet' type='text/css')
-  link(href='/assets/global/plugins/bootstrap-sweetalert/sweetalert.css', rel='stylesheet', type='text/css')
+  link(href='/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css', rel='stylesheet', type='text/css')
+  link(href='/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css', rel='stylesheet', type='text/css')
+  link(href='/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css', rel='stylesheet', type='text/css')
+  link(href='/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css', rel='stylesheet', type='text/css')
+  link(href='/assets/global/plugins/clockface/css/clockface.css', rel='stylesheet', type='text/css')
 
   // END PAGE LEVEL PLUGINS
   // BEGIN THEME GLOBAL STYLES
-  link#style_components(href='/assets/global/css/components.min.css' rel='stylesheet' type='text/css')
-  link(href='/assets/global/css/plugins.min.css' rel='stylesheet' type='text/css')
+  link#style_components(href='/assets/global/css/components.min.css', rel='stylesheet', type='text/css')
+  link(href='/assets/global/css/plugins.min.css', rel='stylesheet', type='text/css')
   // END THEME GLOBAL STYLES
   // BEGIN THEME LAYOUT STYLES
   link(href='/assets/layouts/layout/css/layout.min.css' rel='stylesheet' type='text/css')
@@ -317,12 +323,11 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
               a(href='index1.html') Home
               i.fa.fa-circle
             li
-              a(href='#') Countries
+              a(href='#') Programs
         // END PAGE BAR
         // BEGIN PAGE TITLE
         h1.page-title
-          | Find, Add, Edit or Remove Countries,  States, Citys
-        #alertContainer
+          | Find, Add, Edit or Remove Programs
         // END PAGE TITLE
         // END PAGE HEADER
         .row
@@ -332,37 +337,84 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
               .portlet-title
                 .caption.font-dark
                   i.icon-settings.font-dark
-                  span.caption-subject.bold.uppercase  Countries List
+                  span.caption-subject.bold.uppercase  Programs List
               .portlet-body
                 .table-toolbar
                   .row
                     .col-md-6
                       .btn-group
-                        a.btn.purple.btn-outline.sbold(data-toggle='modal' href='#newCountryModal')
-                          | Add New Country
+                        a#addNew.btn.purple.btn-outline.sbold(data-toggle='modal' href='#large' disabled)
+                          | Add New
                         button#refreshListsButton.btn.yellow.ladda-button(data-style="zoom-in" style='margin-left:10px;')
                           span.ladda-label Refresh
-                    #newCountryModal.modal.fade.bs-modal-lg(tabindex='-1' role='dialog' aria-hidden='true')
+                        // END PORTLET
+                    #large.modal.fade.bs-modal-lg(tabindex='-1' role='dialog' aria-hidden='true')
                       .modal-dialog.modal-lg
                         .modal-content
                           .modal-header
                             button.close(type='button' data-dismiss='modal' aria-hidden='true')
-                            h4.modal-title Add New Country
+                            h4.modal-title Add New Program
                           .modal-body
                             .form-body
                               .form-group
-                                .col-md-6.addCountryNameBox
+                                .col-md-6.addNameBox
                                   label.control-label(for='name') Name
                                   .input-group-col-md-12
-                                    input#addCountryName.form-control(type='text' placeholder='Name')
+                                    input#addName.form-control(type='text' placeholder='Name')
+                                .col-md-6.addSchoolBox
+                                  label.control-label(for='school') School
+                                  .input-group.col-md-12
+                                    select#addSchool.form-control
+                                      option(hidden disabled) School...
+                                .form-group
+                                .col-md-2.addWeeksBox
+                                  label.control-label(for='weeks') Weeks
+                                  .input-group-col-md-12
+                                    input#addWeeks.form-control(type='number' placeholder='Weeks')
+                                .form-group
+                                .col-md-2.addHoursBox
+                                  label.control-label(for='hours') Hours/week
+                                  .input-group-col-md-12
+                                    input#addHours.form-control(type='number' placeholder='Hours')
+                              .form-group
+                                .col-md-4.addLanguageBox
+                                  label.control-label(for='language') Language
+                                  .input-group.col-md-12
+                                    select#addLanguage.form-control(disabled)
+                                      option(hidden disabled) Language...
+                                .col-md-4.addPriceBox
+                                  label.control-label(for='price') Price
+                                  .input-group-col-md-12
+                                    input#addPrice.form-control(type='number' placeholder='Price')
+                                .col-md-6.addTimeBox
+                                  label.control-label(for='time') Time
+                                  .input-group.col-md-12
+                                    select#addTime.form-control
+                                .col-md-12.addStartDateBox
+                                  label.control-label(for='startDate') Start Date
+                                  input#addStartDate.form-control.form-control-inline.input-medium.date-picker(size='16', type='text', value='' data-date-start-date='0d')
+                                .col-md-12.addEndDateBox
+                                  label.control-label(for='endDate') End Date
+                                  input#addEndDate.form-control.form-control-inline.input-medium.date-picker(size='16', type='text', value='')
+                                .col-md-12.addDescriptionBox
+                                  label.control-label(for='adress') Description
+                                  .input-group.col-md-12
+                                    textarea#addDescription.form-control(type='text' placeholder='Description...' rows='4')
+                                .col-md-6.addDiscountBox
+                                  input#discountCheck.make-switch(type='checkbox' checked='' data-size='normal')
+                                  label.control-label(for='discount' style='margin-top:20px; margin-left:10px') Discount
+                                  span.input-group.d-inline-block
+                                    span.input-group-addon
+                                      i.fa.fa-usd
+                                    input#addDiscount.form-control(type='number' placeholder='Discount Price ($$ USD)')
+
+
                             .clearfix
+
                           .modal-footer
-                            button#closeCreateNewCountry.btn.dark.btn-outline(type='button' data-dismiss='modal') Close
-                            button#createNewCountryButton.btn.green.ladda-button.mt-progress-demo(type='button' data-loading-text='Loading...' data-style='slide-left')
-                              span.ladda-label Save Country
-                              span.ladda-spinner
-                              span.ladda-spinner
-                              .ladda-progress(style='width: 115px;')
+                            button.btn.dark.btn-outline(type='button' data-dismiss='modal') Close
+                            button#createNewProgramButton.btn.green.ladda-button(data-style="zoom-in")
+                              span.ladda-label Save Program
                         // /.modal-content
                         // /.modal-dialog
 
@@ -384,7 +436,7 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                             a(href='javascript:;')
                               i.fa.fa-file-excel-o
                               |  Export to Excel
-                table#countryTableBox.table.table-striped.table-bordered.table-hover.table-checkable.order-column
+                table#programsTable.table.table-striped.table-bordered.table-hover.table-checkable.order-column
                   thead
                     tr
                       th
@@ -392,52 +444,12 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                           input.group-checkable(type='checkbox' data-set='#sample_1 .checkboxes')
                           span
                       th  Name 
+                      th  School 
                       th  Status 
+                      th  Language 
                       th  Actions 
-                  tbody#countryTable
-        .row
-          .col-md-12
-            // BEGIN EXAMPLE TABLE PORTLET
-            .portlet.light.bordered
-              .portlet-title
-                .caption.font-dark
-                  i.icon-settings.font-dark
-                  span.caption-subject.bold.uppercase  States List
-              .portlet-body
-                table#stateTableBox.table.table-striped.table-bordered.table-hover.table-checkable.order-column
-                  thead
-                    tr
-                      th
-                        label.mt-checkbox.mt-checkbox-single.mt-checkbox-outline
-                          input.group-checkable(type='checkbox' data-set='#sample_1 .checkboxes')
-                          span
-                      th  Name 
-                      th  Country
-                      th  Status 
-                      th  Actions 
-                  tbody#stateTable
-        .row
-          .col-md-12
-            // BEGIN EXAMPLE TABLE PORTLET
-            .portlet.light.bordered
-              .portlet-title
-                .caption.font-dark
-                  i.icon-settings.font-dark
-                  span.caption-subject.bold.uppercase  Cities List
-              .portlet-body
-                table#cityTableBox.table.table-striped.table-bordered.table-hover.table-checkable.order-column
-                  thead
-                    tr
-                      th
-                        label.mt-checkbox.mt-checkbox-single.mt-checkbox-outline
-                          input.group-checkable(type='checkbox' data-set='#sample_1 .checkboxes')
-                          span
-                      th  Name
-                      th  State
-                      th  Country 
-                      th  Status 
-                      th  Actions 
-                  tbody#cityTable
+                  tbody#programTable
+            // END EXAMPLE TABLE PORTLET
       // END CONTENT BODY
     // END CONTENT
     // BEGIN QUICK SIDEBAR
@@ -856,7 +868,7 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
   script(src='/assets/global/plugins/ie8.fix.min.js')
 // BEGIN CORE PLUGINS
 script(src='/assets/global/plugins/jquery.min.js' type='text/javascript')
-script(src='/public/javascripts/panel-schools.js' type='text/javascript')
+script(src='/assets/global/plugins/jquery-ui/jquery-ui.min.js' type='text/javascript')
 script(src='/assets/global/plugins/bootstrap/js/bootstrap.min.js' type='text/javascript')
 script(src='/assets/global/plugins/js.cookie.min.js' type='text/javascript')
 script(src='/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js' type='text/javascript')
@@ -864,17 +876,25 @@ script(src='/assets/global/plugins/jquery.blockui.min.js' type='text/javascript'
 script(src='/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js' type='text/javascript')
 // END CORE PLUGINS
 // BEGIN PAGE LEVEL PLUGINS
+script(src='/assets/global/plugins/moment.min.js', type='text/javascript')
+script(src='/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js', type='text/javascript')
+script(src='/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js', type='text/javascript')
+script(src='/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js', type='text/javascript')
+script(src='/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js', type='text/javascript')
+script(src='/assets/global/plugins/clockface/js/clockface.js', type='text/javascript')
 script(src='/assets/global/scripts/datatable.js' type='text/javascript')
 script(src='/assets/global/plugins/datatables/datatables.min.js' type='text/javascript')
 script(src='/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js' type='text/javascript')
+script(src='/assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js', type='text/javascript')
+script(src='/assets/pages/scripts/ui-sweetalert.min.js', type='text/javascript')
 // END PAGE LEVEL PLUGINS
 // BEGIN THEME GLOBAL SCRIPTS
-script(src='/assets/global/scripts/app.min.js' type='text/javascript')
+script(src='/assets/global/scripts/app.min.js', type='text/javascript')
 // END THEME GLOBAL SCRIPTS
 // BEGIN PAGE LEVEL SCRIPTS
+script(src='/assets/pages/scripts/components-date-time-pickers.min.js', type='text/javascript')
 script(src='/assets/pages/scripts/table-datatables-managed.min.js' type='text/javascript')
-script(src='../assets/global/plugins/jquery-ui/jquery-ui.min.js' type='text/javascript')
-script(src='../assets/pages/scripts/ui-modals.min.js' type='text/javascript')
+script(src='/assets/pages/scripts/ui-modals.min.js' type='text/javascript')
 
 // END PAGE LEVEL SCRIPTS
 // BEGIN THEME LAYOUT SCRIPTS
@@ -886,24 +906,12 @@ script(src='/assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.
 script(src='/assets/global/plugins/jquery.input-ip-address-control-1.0.min.js' type='text/javascript')
 script(src='/assets/pages/scripts/form-input-mask.min.js' type='text/javascript')
 script(src='/assets/pages/scripts/components-bootstrap-switch.min.js' type='text/javascript')
-script(src='/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js' type='text/javascript')
 script(src='/assets/global/plugins/ladda/spin.min.js' type='text/javascript')
 script(src='/assets/global/plugins/ladda/ladda.min.js' type='text/javascript')
 script(src='/assets/pages/scripts/ui-buttons-spinners.min.js' type='text/javascript')
-script(src='/assets/global/plugins/codemirror/lib/codemirror.js' type='text/javascript')
-script(src='/assets/global/plugins/codemirror/mode/htmlmixed/htmlmixed.js' type='text/javascript')
-script(src='/assets/global/plugins/codemirror/mode/css/css.js' type='text/javascript')
-script(src='/assets/global/plugins/codemirror/mode/javascript/javascript.js' type='text/javascript')
-script(src='/assets/global/plugins/bootstrap-confirmation/bootstrap-confirmation.min.js', type='text/javascript')
-script(src='/assets/pages/scripts/ui-confirmations.min.js', type='text/javascript')
-script(src='/assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js', type='text/javascript')
-script(src='/assets/pages/scripts/ui-sweetalert.min.js', type='text/javascript')
 
 
-
-
-
-script(src='/javascripts/panel-countries.js')
+script(src='/javascripts/panel-programs.js')
 // END THEME LAYOUT SCRIPTS
 script.
   $(document).ready(function()

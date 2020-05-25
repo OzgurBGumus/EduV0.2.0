@@ -16,13 +16,11 @@ const SchoolState = require('../models/SchoolState');
 const SchoolCity = require('../models/SchoolCity');
 //const SchoolLanguage = require('../models/SchoolLanguage');
 //const SchoolReservation = require('../models/SchoolReservation');
-//const SchoolProgram = require('../models/SchoolProgram');
+const SchoolProgram = require('../models/SchoolProgram');
 const Program = require('../models/Program');
-//const ProgramProgramTime = require('../models/ProgramProgramTime');
-//const ProgramProgramWeek = require('../models/ProgramProgramWeek');
+const ProgramLanguage = require('../models/ProgramLanguage');
+const ProgramTime = require('../models/ProgramTime');
 //const ProgramReservation = require('../models/ProgramReservation');
-//const ProgramWeek = require('../models/ProgramWeek');
-//const ProgramTime = require('../models/ProgramTime');
 const LReservation = require('../models/LReservation');
 const Country = require('../models/Country');
 const CountryState = require('../models/CountryState');
@@ -30,6 +28,7 @@ const StateCity = require('../models/StateCity');
 const State = require('../models/State');
 const City = require('../models/City');
 const Language = require('../models/Language');
+const Time = require('../models/Time');
 
 
 //CountryState, CountryCity
@@ -64,8 +63,8 @@ router.get('/find/country', function(req,res,next){
 router.get('/find/state', function(req,res,next){
   var states = [];
   var q = req.query;
-  if(q.name){
-    State.findOne({'name':q.name}, (err,data)=>{
+  if(q.state){
+    State.findOne({'state':q.state}, (err,data)=>{
       res.send(data);
     });
   }
@@ -91,7 +90,6 @@ router.get('/find/state', function(req,res,next){
         CountryState.findOne({stateId:state.id}, (err,data)=>{
           Country.findOne({id:data.countryId}, (err,country)=>{
             states.push([country, state]);
-            console.log(i, l);
             if(i == l-1){
               res.send(states);
             }
@@ -136,7 +134,6 @@ router.get('/find/city', function(req,res,next){
               Country.findOne({id:countryState.countryId}, (err,country)=>{
                 citys.push([country, state, city]);
                 if(i == l-1){
-                  //console.log('send:', citys);
                   res.send(citys);
                 }
                 else{
@@ -164,6 +161,24 @@ router.get('/find/language', function(req,res,next){
   }
   else{
     Language.find({}, (err,data)=>{
+      res.send(data);
+    })
+  }
+});
+router.get('/find/time', function(req,res,next){
+  var q = req.query;
+  if(q.time){
+    Time.findOne({'time':q.time}, (err,data)=>{
+      res.send(data);
+    });
+  }
+  else if(q.timeId){
+    Time.findOne({'id':q.timeId}, (err,data)=>{
+      res.send(data);
+    });
+  }
+  else{
+    Time.find({}, (err,data)=>{
       res.send(data);
     })
   }
@@ -309,7 +324,37 @@ router.get('/find/school', function(req,res,next){
   }
   else{
     School.find({}, (err,data)=>{
-      res.send(data);
+      schools = data;
+      console.log(schools);
+      var place ={};
+      var sendable = [];
+      var i = 0;
+      data.forEach(element => {
+        SchoolCountry.findOne({schoolId:element.id}, (err,data)=>{
+          Country.findOne({id:data.countryId}, (err,data)=>{
+            place.country = data.country;
+            SchoolState.findOne({schoolId:element.id}, (err,data)=>{
+              State.findOne({id:data.stateId}, (err,data)=>{
+                place.state = data.state;
+                SchoolCity.findOne({schoolId:element.id}, (err,data)=>{
+                  City.findOne({id:data.cityId}, (err,data)=>{
+                    place.city = data.city;
+                    school = schools[i];
+                    console.log(school);
+                    var obj = {school, place};
+                    sendable.push(obj);
+                    i++;
+                    if(i==schools.length){
+                      console.log(sendable);
+                      res.send(sendable);
+                    }
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
     })
   }
 });
@@ -320,106 +365,45 @@ router.get('/find/program', function(req,res,next){
       res.send(data);
     });
   }
-  else if(q.name){
-    Program.find({'name':q.name}, (err,data)=>{
-      res.send(data);
-    });
-  }
-  else if(q.price){
-    Program.find({'price':q.price}, (err,data)=>{
-      res.send(data);
-    });
-  }
-  else if(q.discount){
-    Program.find({'discount':q.discount}, (err,data)=>{
-      res.send(data);
-    });
-  }
-  else if(q.dPrice){
-    Program.find({'dPrice':q.dPrice}, (err,data)=>{
-      res.send(data);
-    });
-  }
-  else if(q.schoolId){
-    /*SchoolProgram.find({'schoolId':q.schoolId}, (err,data)=>{
-      var Ids = [];
-      data.forEach(element => {
-        Ids.push(element.programId);
-      });
-      Program.find({'programId': {$in : Ids}}, (err,program)=>{ //????????????????????????????????????????????????????????????????????????????????????
-        res.send(program);
-      });
-    });*/
-  }
-  else if(q.programTimeId){
-    /*ProgramProgramTime.find({'programTimeId':q.programTimeId}, (err,data)=>{
-      var Ids = [];
-      data.forEach(element => {
-        Ids.push(element.programId);
-      });
-      Program.find({'programId': {$in : Ids}}, (err,program)=>{ //????????????????????????????????????????????????????????????????????????????????????
-        res.send(program);
-      });
-    });*/
-  }
-  else if(q.programWeekId){
-    /*ProgramProgramWeek.find({'programWeekId':q.programWeekId}, (err,data)=>{
-      var Ids = [];
-      data.forEach(element => {
-        Ids.push(element.programId);
-      });
-      Program.find({'programId':d{$in : Ids}}, (err,program)=>{
-        res.send(program);
-      });
-    });*/
-  }
-})
-router.get('/find/programTime', function(req,res,next){
-  var q = req.query;
-  if(q.programTimeId){
-    /*ProgramTime.findOne({'programTimeId':q.programTimeId}, (err,data)=>{
-      res.send(data);
-    });*/
-  }
-  else if(q.programId){
-    /*ProgramProgramTime.findOne({'programId':q.programId}, (err,data)=>{
-      ProgramTime.findOne({'programTimeId':data.programTimeId}, (err, programTime)=>{
-        res.send(programTime);
-      })
-    });*/
-  }
-  else if(q.name){
-    /*ProgramTime.find({'name':q.name}, (err,data)=>{
-      res.send(data);
-    });*/
-  }
   else{
-    res.send({status:0});
+    Program.find({}, (err,data)=>{
+      programs = data;
+      var stats ={};
+      var sendable = [];
+      var i = 0;
+      if(data != []){
+        data.forEach(element => {
+          console.log('ElementId:::::::::', element.id);
+          ProgramLanguage.findOne({programId:element.id}, (err,data)=>{
+            console.log('programLanguage::::::::::::::::::::::'+data);
+            Language.findOne({id:data.languageId}, (err,data)=>{
+              stats.language = data.language;
+              ProgramTime.findOne({programId:element.id}, (err,data)=>{
+                Time.findOne({id:data.timeId}, (err,data)=>{
+                  stats.time = data.time;
+                  SchoolProgram.findOne({programId:element.id}, (err,data)=>{
+                    School.findOne({id:data.schoolId}, (err,data)=>{
+                      stats.school = data.name;
+                      program = programs[i];
+                      console.log(program);
+                      var obj = {program, stats};
+                      sendable.push(obj);
+                      i++;
+                      if(i==programs.length){
+                        console.log(sendable);
+                        res.send(sendable);
+                      }
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      }
+    })
   }
-})
-router.get('/find/programWeek', function(req,res,next){
-  var q = req.query;
-  if(q.programWeekId){
-    /*ProgramWeek.findOne({'programWeekId':q.programWeekId}, (err,data)=>{
-      res.send(data);
-    });*/
-  }
-  else if(q.programId){
-    /*ProgramProgramWeek.findOne({'programId':q.programId}, (err,data)=>{
-      ProgramWeek.findOne({'programWeekId':data.programWeekId}, (err, programWeek)=>{
-        res.send(programWeek);
-      })
-    });*/
-  }
-  else if(q.name){
-    /*ProgramWeek.find({'name':q.name}, (err,data)=>{
-      res.send(data);
-    });*/
-  }
-  else{
-    res.send({status:0});
-  }
-})
+});
 router.get('/find/reservation', function(req,res,next){
   var q = req.query;
   if(q.reservationId){
@@ -479,7 +463,6 @@ router.get('/find/reservation', function(req,res,next){
     res.send({status:0});
   }
 });
-
 router.get('/find/user', function(req,res,next){
   var q = req.query;
   if(q.name && q.surname && q.mail && q.username){
@@ -571,6 +554,7 @@ router.put('/find/school', function(req,res,next){
     if(req.query.discount){
       discount = req.query.discount;
     }
+    console.log(req.query.url)
     const school = new School({
       id:newId,
       URL:req.query.url,
@@ -582,7 +566,8 @@ router.put('/find/school', function(req,res,next){
       accommodation:accommodation,
       airport:airport,
       hInsurance:hInsurance,
-      discount:discount
+      discount:discount,
+      status:true
     });
     Country.findOne({country:req.query.country}, (err, country)=>{
       const schoolCountry = new SchoolCountry({
@@ -638,7 +623,128 @@ router.put('/find/school', function(req,res,next){
       }
     })
   })
-})
+});
+router.put('/find/program', function(req,res,next){
+  Program.find({}, (err, programs)=>{
+    var i = 0;
+    var newId=0;
+    for(i=0;i<programs.length;i++){
+      if(programs[i].id>=newId){
+        newId = programs[i].id+1;
+      }
+    }
+    console.log("newId::::::"+newId);
+    var discount = 0;
+    if(req.query.discount){
+      discount = req.query.discount;
+    }
+    console.log(req.query.start);
+    console.log(req.query.end);
+    var sDay ='';
+    var sMonth='';
+    var sYear='';
+    var eDay='';
+    var eMonth='';
+    var eYear='';
+    var Splace=0;
+    var Eplace=0;
+    for(i=0;i<req.query.start.length;i++){
+      console.log('Splace = '+Splace);
+      if(req.query.start[i] =='/'){
+        Splace++;
+      }
+      else if(Splace == 0){
+        sDay = sDay+req.query.start[i];
+      }
+      else if(Splace == 1){
+        sMonth = sMonth+req.query.start[i];
+      }
+      else if(Splace == 2){
+        sYear = sYear+req.query.start[i];
+      }
+    }
+    console.log(sDay, sMonth, sYear);
+    for(i=0;i<req.query.end.length;i++){
+      console.log('Eplace = '+Eplace);
+      if(req.query.end[i] =='/'){
+        Eplace++;
+      }
+      else if(Eplace == 0){
+        eDay = eDay+req.query.end[i];
+      }
+      else if(Eplace == 1){
+        eMonth = eMonth+req.query.end[i];
+      }
+      else if(Eplace == 2){
+        eYear = eYear+req.query.end[i];
+      }
+    }
+    console.log(eDay, eMonth, eYear);
+    const program = new Program({
+      id:newId,
+      name:req.query.name,
+      hours:req.query.hours,
+      weeks:req.query.weeks,
+      adress:req.query.adress,
+      startDateDay: sDay,
+      startDateMonth: sMonth,
+      startDateYear: sYear,
+      endDateDay: eDay,
+      endDateMonth: eMonth,
+      endDateYear: eYear,
+      price:req.query.price,
+      discount:discount,
+      description:req.query.description,
+      status: true
+    });
+    const schoolProgram = new SchoolProgram({
+      schoolId: req.query.schoolId,
+      programId: newId
+    });
+    schoolProgram.save((err,data)=>{
+      if(err){
+        console.log('>schoolProgram Error..');
+      }
+      else{
+        console.log('>schoolProgram Created..');
+      }
+    });
+    const programLanguage = new ProgramLanguage({
+      programId: newId,
+      languageId: req.query.languageId
+    });
+    programLanguage.save((err,data)=>{
+      if(err){
+        console.log('>programLanguage Error..');
+      }
+      else{
+        console.log('>programLanguage Created..');
+      }
+    });
+    const programTime = new ProgramTime({
+      programId: newId,
+      timeId: req.query.timeId
+    });
+    programTime.save((err,data)=>{
+      if(err){
+        console.log('>programTime Error..');
+      }
+      else{
+        console.log('>programTime Created..');
+      }
+    });
+    program.save((err,data)=>{
+      if(err){
+        console.log('>program Couldnt Created..', err);
+        res.send('no');
+      }
+      else{
+        console.log('>program Created..', data);
+        res.send('yes');
+      }
+    })
+  })
+});
 router.put('/find/country', function(req,res,next){
   Country.find({}, (err, countries)=>{
     var i = 0;
@@ -652,31 +758,39 @@ router.put('/find/country', function(req,res,next){
       id: newId,
       country: req.query.country
       });
-    const state = new State({
-      id:0,
-      state: req.query.country
-    });
-    state.save((err,data)=>{
-      if(err)
-        console.log(err);
-      console.log('new countrys state is created:'+data);
-    });
-    const countryState = new CountryState({
-      countryId:newId,
-      stateId:0,
-    });
-    countryState.save((err,data)=>{
-      if(err)
-        console.log(err);
-      console.log('new countryState is created:'+data);
-    });
-
-    country.save((err, data)=>{
-      if (err)
-          console.log(err);
-
-      res.send(data.country);
-  });
+      State.find({}, (err,states)=>{
+        var tempStateId=0;
+        for(i=0;i<states.length;i++){
+          if(states[i].id>=tempStateId){
+            tempStateId = states[i].id+1;
+          }
+        }
+        const state = new State({
+          id:tempStateId,
+          state: req.query.country
+        });
+        state.save((err,data)=>{
+          if(err)
+            console.log(err);
+          console.log('new countrys state is created:'+data);
+        });
+        const countryState = new CountryState({
+          countryId:newId,
+          stateId:tempStateId,
+        });
+        countryState.save((err,data)=>{
+          if(err)
+            console.log(err);
+          console.log('new countryState is created:'+data);
+        });
+    
+        country.save((err, data)=>{
+          if (err)
+              console.log(err);
+    
+          res.send(data.country);
+        });
+      })
   });
 });
 router.put('/find/state', function(req,res,next){
@@ -693,7 +807,7 @@ router.put('/find/state', function(req,res,next){
       id: newId,
       state: req.query.state,
       });
-    Country.findOne({country:req.query.country}, (err, country)=>{
+    Country.findOne({id:req.query.countryId}, (err, country)=>{
       const countryState = new CountryState({
         countryId: country.id,
         stateId: newId
@@ -723,7 +837,8 @@ router.put('/find/city', function(req,res,next){
       id: newId,
       city: req.query.city,
       });
-    State.findOne({state:req.query.state}, (err, state)=>{
+    State.findOne({id:req.query.stateId}, (err, state)=>{
+      console.log('state:', state.state);
       const stateCity = new StateCity({
         stateId: state.id,
         cityId: newId
@@ -745,13 +860,14 @@ router.put('/find/city', function(req,res,next){
 router.put('/find/language', function(req,res,next){
   Language.find({}, (err, languages)=>{
     var i = 0;
+    var newId=0;
     for(i=0;i<languages.length;i++){
-      if(languages[i].id != i){
-        break;
+      if(languages[i].id>=newId){
+        newId = languages[i].id+1;
       }
     }
     const language = new Language({
-      id: i,
+      id: newId,
       language: req.query.language,
       });
 
@@ -763,10 +879,44 @@ router.put('/find/language', function(req,res,next){
   });
   });
 });
+router.put('/find/time', function(req,res,next){
+  Time.find({}, (err, times)=>{
+    var i = 0;
+    var newId=0;
+    for(i=0;i<times.length;i++){
+      if(times[i].id>=newId){
+        newId = times[i].id+1;
+      }
+    }
+    const time = new Time({
+      id: newId,
+      time: req.query.time,
+      });
+
+    time.save((err, data)=>{
+      if (err)
+          console.log(err);
+      console.log(data);
+      res.send(data);
+  });
+  });
+});
+router.post('/find/logo', function(req,res,next){
+  var fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function (fieldname, file, filename) {
+        console.log("Uploading: " + filename); 
+        fstream = fs.createWriteStream(__dirname+'/'+ filename);
+        file.pipe(fstream);
+        fstream.on('close', function () {
+            res.redirect('back');
+        });
+    });
+})
 
 ///////////////////////////////////
 router.patch('/find/country', function(req,res,next){
-  Country.findOneAndUpdate({country:req.query.country}, {country:req.query.name}, function(err, doc){
+  Country.findOneAndUpdate({country:req.query.countryId}, {country:req.query.name}, function(err, doc){
     if(err){
       console.log('PATCH /find/country-->findOneAndUpdate Error:' + err);
     }
@@ -777,7 +927,7 @@ router.patch('/find/country', function(req,res,next){
   });
 });
 router.patch('/find/state', function(req,res,next){
-  State.findOneAndUpdate({state:req.query.state}, {state:req.query.name}, function(err, doc){
+  State.findOneAndUpdate({id:req.query.stateId}, {state:req.query.name}, function(err, doc){
     if(err){
       console.log('PATCH /find/state-->findOneAndUpdate Error:' + err);
     }
@@ -788,7 +938,7 @@ router.patch('/find/state', function(req,res,next){
   });
 });
 router.patch('/find/city', function(req,res,next){
-  City.findOneAndUpdate({city:req.query.city}, {city:req.query.name}, function(err, doc){
+  City.findOneAndUpdate({city:req.query.cityId}, {city:req.query.name}, function(err, doc){
     if(err){
       console.log('PATCH /find/city-->findOneAndUpdate Error:' + err);
     }
@@ -798,6 +948,118 @@ router.patch('/find/city', function(req,res,next){
     res.send(req.query.name);
   });
 });
+router.patch('/find/school', function(req,res,next){
+  if(req.query.status){
+    var newStatus = false;
+    if(req.query.status == 'true'){
+      newStatus = true;
+      console.log('newStatus:'+newStatus);
+    }
+    else if(req.query.status =='false'){
+      newStatus = false;
+      console.log('newStatus:'+newStatus);
+    }
+    else{
+      Console.log('School Status Failed!!!');
+      res.send('');
+    }
+    School.findOneAndUpdate({id:req.query.id}, {status:newStatus}, function(err, doc){
+      if(err){
+        console.log(err);
+      }
+      else{
+        res.send('');
+      }
+    })
+  }
+  else if(req.query.id || req.query.id != ''){
+    var airport=0;
+    var hInsurance=0;
+    var accommodation=0;
+    var discount=0;
+    if(req.query.airport){
+      airport = req.query.airport;
+    }
+    if(req.query.hInsurance){
+      hInsurance = req.query.hInsurance;
+    }
+    if(req.query.accommodation){
+      accommodation = req.query.accommodation;
+    }
+    if(req.query.discount){
+      discount = req.query.discount;
+    }
+    School.findOneAndUpdate({id:req.query.id}, {URL:req.query.url, name:req.query.name, email:req.query.email, description:req.query.description, adress:req.query.adress, phone:req.query.phone, accommodation:accommodation, airport:airport, hInsurance:hInsurance, discount:discount}, function(err,doc){
+        if(err){
+          console.log('PATCH /find/school-->findOneAndUpdate STATE -1- Error:' + err);
+        }
+        else{
+          console.log('PATCH /find/School-->findOneAndUpdate STATE -1- Done.');
+          Country.findOne({country:req.query.country}, (err,data)=>{
+            if(err){
+              console.log('Country Error:', err);
+            }
+            SchoolCountry.findOneAndUpdate({schoolId:req.query.id}, {countryId:data.id}, function(err,doc){
+              if(err){
+                console.log('PATCH /find/school-->findOneAndUpdate STATE -2- Error:' + err);
+              }
+              else{
+                console.log('PATCH /find/School-->findOneAndUpdate STATE -2- Done.');
+                State.findOne({state:req.query.state}, (err,data)=>{
+                  SchoolState.findOneAndUpdate({schoolId:req.query.id}, {stateId:data.id}, function(err,doc){
+                    if(err){
+                      console.log('PATCH /find/school-->findOneAndUpdate STATE -3- Error:' + err);
+                    }
+                    else{
+                      console.log('PATCH /find/School-->findOneAndUpdate STATE -3- Done.');
+                      City.findOne({city:req.query.city}, (err,data)=>{
+                        console.log(data);
+                        SchoolCity.findOneAndUpdate({schoolId:req.query.id}, {cityId:data.id}, function(err,doc){
+                          if(err){
+                            console.log('PATCH /find/school-->findOneAndUpdate STATE -3- Error:' + err);
+                          }
+                          else{
+                            console.log('PATCH /find/School-->findOneAndUpdate STATE -4- Done.');
+                            res.end('');
+                          }
+                        })
+                      })
+                    }
+                  })
+                })
+              }
+            })
+          })
+        }
+      })
+  }
+});
+router.patch('/find/program', function(req,res,next){
+  if(req.query.status){
+    var newStatus = false;
+    if(req.query.status == 'true'){
+      newStatus = true;
+      console.log('newStatus:'+newStatus);
+    }
+    else if(req.query.status =='false'){
+      newStatus = false;
+      console.log('newStatus:'+newStatus);
+    }
+    else{
+      Console.log('School Status Failed!!!');
+      res.send('');
+    }
+    Program.findOneAndUpdate({id:req.query.id}, {status:newStatus}, function(err, doc){
+      if(err){
+        console.log(err);
+      }
+      else{
+        res.send('');
+      }
+    })
+  }
+});
+
 router.patch('/find/language', function(req,res,next){
   Language.findOneAndUpdate({language:req.query.language}, {language:req.query.name}, function(err, doc){
     if(err){
@@ -912,89 +1174,239 @@ router.put('/language/changeName', function(req,res,next){
   res.send(changedName);
 });
 router.delete('/city/delete', function(req,res,next){
-  var id = req.query.id;
-  City.findOneAndDelete({id}, (data)=>{
-    if(!data){
-      console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-      res.send('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-    }
-    else{
-      res.send('///////////////////////////////////////////////////////  Data is not Found: '+ req.query.id);
-    }
-  });
-
+  var id=req.query.id;
+  var promise = new Promise((resolve, reject)=>{
+    StateCity.find({'cityId':req.query.id}, (err, statecity)=>{
+      console.log('here 0');
+      console.log(statecity);
+      StateCity.findOneAndDelete({'cityId':req.query.id}, (err,data)=>{
+        console.log('StateCity is Deleted.');
+        resolve('StateCity is Deleted.');
+      })
+    });
+  })
+  promise.then(()=>{
+    City.findOneAndDelete({'id':req.query.id}, (err,data)=>{
+      if(err){
+        console.log(err);
+      }
+      else{
+        console.log('City is Deleted.');
+        res.send('City is Deleted.')
+      }
+    })
+  })
 });
 router.delete('/state/delete', function(req,res,next){
   var id=req.query.id;
-  City.deleteMany({'stateId':id} , (err, data)=>{
-    if(err){
-      console.log('/state/Delete ==>City.deleteMany ERROR: : :  '+err);
-    }
-    else{
-      console.log('/state/Delete ==> City.deleteMany SUCCESS');
-    }
-  });
-  State.findOneAndDelete({id}, (data)=>{
-    if(!data){
-      console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-      res.send('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-    }
-    else{
-      res.send('///////////////////////////////////////////////////////  Data is not Found: '+ req.query.id);
-    }
-  });
+  var promise = new Promise((resolve, reject)=>{
+    StateCity.find({'stateId':req.query.id}, (err, statecity)=>{
+      console.log('here 0');
+      console.log(statecity);
+      if(statecity.length != 0){
+        statecity.forEach(statecityElement => {
+          console.log('here 2');
+          console.log(statecity);
+          console.log(statecity.length);
+          if(statecity.length != 0){
+            statecity.forEach(statecityElement => {
+              console.log('here 3');
+              console.log(statecityElement);
+              City.findOneAndDelete({'id':statecityElement.cityId}, (err,data)=>{
+                if(statecityElement == statecity[statecity.length-1]){
+                  console.log('Citys Deleted done.');
+                  resolve('Citys Deleted done.');
+                }
+              })
+            });
+          }
+          else{
+            console.log('Havent any city//');
+            resolve('Havent any city//')
+          }
+        });
+      }
+      else{
+        console.log('Havent any city//');
+        resolve('Havent any city//')
+      }
+    });
+  })
+  promise.then(()=>{
+    StateCity.deleteMany({'stateId':req.query.id}, (err,data)=>{
+      if(err){
+        console.log(err);
+      }
+      console.log('StateCitys Deleted done.');
+      console.log('here 5');
+      CountryState.deleteMany({'stateId':req.query.id}, (err,data)=>{
+        if(err){
+          console.log('CountryState DeleteMany Error:', error);
+        }
+        else{
+          console.log('CountryState is Deleted.');
+          State.deleteMany({'id':req.query.id}, (err,data)=>{
+            if(err){
+              console.log('State DeleteMany Error:', err);
+            }
+            else{
+              console.log('State is Deleted.');
+              res.send('State is Deleted.');
+            }
+          })
+        }
+      })
+    })
+  })
 });
 
 router.delete('/country/delete', function(req,res,next){
   var id=req.query.id;
-  State.find({'countryId':id}, (err, data)=>{
-    if(err){
-      res.send('/country/delete => State.find ERROR : : : : '+err);
-    }
-    else{
-      data.forEach(element => {
-        City.deleteMany({'stateId':element.id} , (err, data)=>{
+  var promise = new Promise((resolve, reject)=>{
+    CountryState.find({'countryId':req.query.id}, (err, countrystate)=>{
+      console.log('here 0');
+      countrystate.forEach(countrystateElement => {
+        console.log('here 1');
+        console.log(countrystateElement);
+        StateCity.find({'stateId':countrystateElement.stateId}, (err, statecity)=>{
           if(err){
-            console.log('/city/Delete ==>City.deleteMany ERROR: : :  '+err);
+            console.log(err);
+          }
+          console.log('here 2');
+          console.log(statecity);
+          console.log(statecity.length);
+          if(statecity.length != 0){
+            statecity.forEach(statecityElement => {
+              console.log('here 3');
+              console.log(statecityElement);
+              City.findOneAndDelete({'id':statecityElement.cityId}, (err,data)=>{
+                if(countrystateElement == countrystate[countrystate.length-1]){
+                  console.log('Citys Deleted done.');
+                  resolve('Citys Deleted done.');
+                }
+              })
+            });
           }
           else{
-            console.log('/city/Delete ==> City.deleteMany SUCCESS');
+            console.log('Havent any city//');
+            resolve('Havent any city//')
           }
-        });
+        })
       });
-    }
-  });
-  State.deleteMany({'countryId':id} , (err, data)=>{
-    if(err){
-      console.log('/country/Delete ==>State.deleteMany ERROR: : :  '+err);
-    }
-    else{
-      console.log('/country/Delete ==> State.deleteMany SUCCESS');
-    }
-  });
-
-  Country.findOneAndDelete({id}, (data)=>{
-    if(!data){
-      console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-      res.send('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-    }
-    else{
-      res.send('///////////////////////////////////////////////////////  Data is not Found: '+ req.query.id);
-    }
-  });
+    });
+  })
+  promise.then(()=>{
+    console.log('here 4');
+    CountryState.find({'countryId':req.query.id}, (err, countrystate)=>{
+      countrystate.forEach(countrystateElement => {
+        StateCity.deleteMany({'stateId':countrystateElement.stateId}, (err,data)=>{
+          if(err){
+            console.log(err);
+          }
+          if(countrystateElement == countrystate[countrystate.length-1]){
+            console.log('StateCitys Deleted done.');
+            console.log('here 5');
+            CountryState.find({'countryId':req.query.id}, (err, countrystate)=>{
+              countrystate.forEach(countrystateElement => {
+                console.log('')
+                State.deleteMany({'id':countrystateElement.stateId}, (err, data)=>{
+                  if(err){
+                    console.log(err);
+                  }
+                  else{
+                    if(countrystateElement == countrystate[countrystate.length-1]){
+                      console.log('States Deleted done.')
+                      console.log('here 6');
+                      CountryState.deleteMany({'countryId':req.query.id}, (err, data)=>{
+                        if(err){
+                          console.log('countryState DeleteMany Error:', err);
+                        }
+                        else{
+                          console.log('CountryStates Deleted done.')
+                          console.log('here 7');
+                          Country.deleteMany({'id':req.query.id}, (err,data)=>{
+                            if(err){
+                              console.log('countryState DeleteMany Error:', err);
+                            }
+                            else{
+                              console.log('Country is Deleted.');
+                              res.send('Country is Deleted.');
+                            }
+                          })
+                        }
+                      });
+                    }
+                  }
+                })
+              });
+            });
+          }
+        })
+      });
+    });
+  })
 });
 router.delete('/language/delete', function(req,res,next){
+  var id=req.query.id;
+  var promise = new Promise((resolve, reject)=>{
+    //ProgramLanguage.findOneAndDelete({'cityId':req.query.id}, (err,data)=>{
+      // PROGRAM WILL BE DELETED, PROGRAMLANGUAGE WILL BE DELETED IN HERE.
+      //console.log('StateCity is Deleted.');
+      resolve('StateCity is Deleted.');
+    //})
+  })
+  promise.then(()=>{
+    Language.findOneAndDelete({'id':req.query.id}, (err,data)=>{
+      if(err){
+        console.log(err);
+      }
+      else{
+        console.log('Language is Deleted.');
+        res.send('Language is Deleted.')
+      }
+    })
+  })
+});
+router.delete('/school/delete', function(req,res,next){
   var id = req.query.id;
-  Language.findOneAndDelete({id}, (data)=>{
+  School.findOneAndDelete({id}, (data)=>{
     if(!data){
       console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-      res.send('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+      SchoolCity.findOneAndRemove({schoolId:id}, (data)=>{
+        if(!data){
+          console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+          SchoolState.findOneAndRemove({schoolId:id}, (data)=>{
+            if(!data){
+              console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+              SchoolCountry.findOneAndRemove({schoolId:id}, (data)=>{
+                if(!data){
+                  console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
+                  console.log('last');
+                  res.send({status:'1'});
+                }
+                else{
+                  console.log('///////////////////////////////////////////////////////[SchoolCountry findOneAndRemove]  Data is not Found: '+ req.query.id);
+                  res.send('[SchoolCountry findOneAndRemove] error');
+                }
+              });
+            }
+            else{
+              console.log('///////////////////////////////////////////////////////[SchoolState findOneAndRemove]  Something went wrong: '+ req.query.id);
+              res.send('[SchoolState findOneAndRemove] error');
+            }
+          });
+        }
+        else{
+          console.log('///////////////////////////////////////////////////////[SchoolCity findOneAndRemove]  Something went wrong: '+ req.query.id);
+          res.send('[SchoolCity findOneAndRemove] error');
+        }
+      });
     }
     else{
-      res.send('///////////////////////////////////////////////////////  Data is not Found: '+ req.query.id);
+      console.log('///////////////////////////////////////////////////////[School findOneAndRemove]  Something went wrong: '+ req.query.id);
+      res.send('[School findOneAndRemove] error');
     }
   });
-
 });
 
 
@@ -1046,7 +1458,6 @@ router.get('/programCourseId/:courseid', function(req, res, next){
   }
 })
 router.get('/homepage/:language/:country/:duration/:accommodation', function(req, res, next) {
-    console.log('---------->router.get(/homepage/:language/:country/:duration/:accommodation)');
     const {language, country, duration, accommodation} = req.params;
     if(country == 'All Countries'){
       if(accommodation == 'Yes'){
@@ -1129,7 +1540,6 @@ router.get('/homepage/:language/:country/:duration/:accommodation', function(req
 
 router.get('/FilterInCoursePage/:time', function(req, res, next) {
     const {time} = req.params;
-    console.log('----------------------------------------------------------------------------------------'+time);
     Program.find({'time': time}, (err, data)=>{
       res.send(data);
     });
@@ -1137,16 +1547,13 @@ router.get('/FilterInCoursePage/:time', function(req, res, next) {
 
 router.get('/FilterInCoursePage/:time/:program', function(req, res, next) {
     const {time, program} = req.params;
-    console.log('----------------------------------------------------------------------------------------'+time, program);
     Program.find({'time': time, 'name': program}, (err, data)=>{
       res.send(data);
-      console.log(data);
     });
 });
 
 router.get('/FilterInCoursePage/:time/:program/:hours', function(req, res, next) {
   const {time, program, hours} = req.params;
-  console.log('----------------------------------------------------------------------------------------'+time, program);
   Program.find({'time': time, 'name': program, 'hours': hours}, (err, data)=>{
     res.send(data);
   });
@@ -1398,36 +1805,24 @@ router.post("/panel/multiple-upload", function(req, res){
 });
 
 function stateListFunction(data, i, stateArray, res){
-  console.log('new Function i=',i);
-  console.log(stateArray);
   if(i == data.length){
-    console.log(stateArray);
-    console.log('return stateArray: ', stateArray);
     res.send(stateArray);
   }
   else{
     State.findOne({id:data[i].stateId}, (err,state)=>{
-      console.log('function findOne:', state);
       stateArray.push(state);
-      console.log('Loop');
       i++;
       stateListFunction(data, i, stateArray, res);
     })
   }
 }
 function cityListFunction(data, i, cityArray, res){
-  console.log('new Function i=',i);
-  console.log(cityArray);
   if(i == data.length){
-    console.log(cityArray);
-    console.log('return cityArray: ', cityArray);
     res.send(cityArray);
   }
   else{
     City.findOne({id:data[i].cityId}, (err,city)=>{
-      console.log('function findOne:', city);
       cityArray.push(city);
-      console.log('Loop');
       i++;
       cityListFunction(data, i, cityArray, res);
     })

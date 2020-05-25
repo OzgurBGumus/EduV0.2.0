@@ -12,7 +12,8 @@ const SchoolSchema = new Schema({
     accommodation: String,
     airport: String,
     hInsurance: String,
-    discount: String
+    discount: String,
+    status: Boolean,
 });
 
 module.exports = mongoose.model('schools', SchoolSchema);

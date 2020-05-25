@@ -19,10 +19,7 @@ router.get('/homepage', function(req, res, next) {
 
 router.get('/:schoolHttp', function(req,res,next){
   const {schoolHttp} = req.params;
-  console.log('before Find Test');
   Course.find({'schoolHttp' : schoolHttp}, (err, courses)=>{
-    console.log('Find Test');
-    console.log(courses.length)
     if(courses.length >= 1){
       Program.find({'schoolId' : courses[0].schoolId}, (err, programs)=>{
         var temp1 =0;

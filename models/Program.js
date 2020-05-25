@@ -2,21 +2,21 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ProgramSchema = new Schema({
-    schoolId: Number,
+    id: Number,
     programId: Number,
     name: String,
-    time: String,
     hours: Number,
+    weeks: Number,
     startDateYear: Number,
     startDateMonth: Number,
     startDateDay: Number,
-    finishDateYear : Number,
-    finishDateMonth : Number,
-    finishDateDay : Number,
+    endDateYear : Number,
+    endDateMonth : Number,
+    endDateDay : Number,
     price: String,
     discount: String,
-    discountedPrice: String,
-    description: String
+    description: String,
+    status: Boolean
 });
 
 module.exports = mongoose.model('Programs', ProgramSchema);

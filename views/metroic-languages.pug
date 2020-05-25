@@ -31,6 +31,7 @@ head
   link(href='/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css' rel='stylesheet' type='text/css')
   // END GLOBAL MANDATORY STYLES
   // BEGIN PAGE LEVEL PLUGINS
+  link(href='/assets/global/plugins/ladda/ladda-themeless.min.css', rel='stylesheet', type='text/css')
   link(href='/assets/global/plugins/datatables/datatables.min.css' rel='stylesheet' type='text/css')
   link(href='/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css' rel='stylesheet' type='text/css')
   link(href='/assets/global/plugins/bootstrap-sweetalert/sweetalert.css', rel='stylesheet', type='text/css')
@@ -339,6 +340,8 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                       .btn-group
                         a.btn.purple.btn-outline.sbold(data-toggle='modal' href='#newLanguageModal')
                           | Add New Language
+                        button#refreshListsButton.btn.yellow.ladda-button(data-style="zoom-in" style='margin-left:10px;')
+                          span.ladda-label Refresh
                     #newLanguageModal.modal.fade.bs-modal-lg(tabindex='-1' role='dialog' aria-hidden='true')
                       .modal-dialog.modal-lg
                         .modal-content
