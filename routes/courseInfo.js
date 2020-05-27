@@ -10,7 +10,7 @@ router.use(busboy());
 
 //Models
 const School = require('../models/School');
-const SchoolLogo = require('../models/SchoolLogo');
+const SchoolLogo = require('../models/schoolLogo');
 const SchoolImage = require('../models/SchoolImage');
 const SchoolProgram = require('../models/SchoolProgram');
 const SchoolCountry = require('../models/SchoolCountry');
