@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const CitySchema = new Schema({
+const SchoolLogoSchema = new Schema({
     schoolId: Number,
     logoId: Number,
 });
 
-module.exports = mongoose.model('schoolLogo', CitySchema);
+module.exports = mongoose.model('schoolLogo', SchoolLogoSchema);

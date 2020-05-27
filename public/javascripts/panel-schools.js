@@ -1,8 +1,10 @@
+var newSchoolId = '';
 $(document).ready(function(){
     var currentSchoolId = 0;
     $('#refreshListsButton').on('click', function(){
         var l = Ladda.create(this);
         l.start();
+        refreshNewSchoolCountries();
         refreshSchoolList(()=>{
             l.stop();
         });
@@ -10,6 +12,35 @@ $(document).ready(function(){
     $('#refreshListsButton').trigger('click');
     $('#airportCheck').on('click', ()=>{
     });
+    Dropzone.options.logoDropzone ={
+        maxFiles: 1,
+        acceptedFiles: "image/*",
+        autoProcessQueue: false,
+        url:'/find/logo',
+        init: function() {
+            this.on("processing", function(file) {
+                this.options.url = "/find/logo?schoolId="+newSchoolId;
+            });
+            this.on("queuecomplete", function (file) {
+                this.removeAllFiles();
+            });
+        },
+        
+    }
+    Dropzone.options.schoolImagesDropzone ={
+        acceptedFiles: "image/*",
+        autoProcessQueue: false,
+        url:'/find/images',
+        parallelUploads: 15,
+        init: function() {
+            this.on("processing", function(file) {
+                this.options.url = "/find/image?schoolId="+newSchoolId;
+            });
+            this.on("queuecomplete", function (file) {
+                this.removeAllFiles();
+            });
+        }
+    }
     $('#createNewSchoolButton').on('click', function(){
         var l = Ladda.create(this);
         l.start();
@@ -27,29 +58,45 @@ $(document).ready(function(){
             checks[3]=1;
         }
         newSchoolCheckEmptyBoxes(checks, l, (CreateSchoolExtras, l)=>{
-            console.log('/find/school?url='+$('#addURL').val()+'&name='+$('#addName').val()+'&description='+$('#addDescription').val()+'&adress='+$('#addAdress').val()+'&phone='+$('.addPhone').val()+CreateSchoolExtras);
+            var nState ='none';
+            var nCity = 'none';
+            if($('#addState').text() != ''){
+                nState = $('#addState').val();
+            }
+            if($('#addCity').text() != ''){
+                nCity = $('#addCity').val();
+            }
             $.ajax({
-                url:'/find/school?url='+$('#addURL').val()+'&name='+$('#addName').val()+'&email='+$('#addEmail').val()+'&country='+$('#addCountry').val()+'&state='+$('#addState').val()+'&city='+$('#addCity').val()+'&description='+$('#addDescription').val()+'&adress='+$('#addAdress').val()+'&phone='+$('.addPhone').val()+CreateSchoolExtras,
+                url:'/find/school?url='+$('#addURL').val()+'&name='+$('#addName').val()+'&email='+$('#addEmail').val()+'&countryId='+$('#addCountry').val()+'&stateId='+nState+'&cityId='+nCity+'&description='+$('#addDescription').val()+'&adress='+$('#addAdress').val()+'&phone='+$('.addPhone').val()+CreateSchoolExtras,
                 method:'PUT',
-                success:(country)=>{
+                success:(data)=>{
+                    newSchoolId = data.schoolId;
+                    var logoDropzone = Dropzone.forElement("#logoDropzone");
+                    var schoolImagesDropzone = Dropzone.forElement('#schoolImagesDropzone');
+                    logoDropzone.processQueue();
+                    schoolImagesDropzone.processQueue();
                     l.stop();
                     $('.close').trigger('click');
-                    refreshSchoolList(()=>{});
+                    clearNewSchool();
+                    $('#refreshListsButton').trigger('click');
                 }
-            })
+            });
         });
     });
-    refreshNewSchoolCountries();
     //refreshNewSchoolStates();
     //refreshNewSchoolCitys();
     $('#addCountry').on('change', function(){
+        $('.addStateBox').hide();
+        $('.addCityBox').hide();
         refreshNewSchoolStates();
     });
     $('#addState').on('change', function(){
+        $('.addCityBox').hide();
         refreshNewSchoolCitys();
     });
 })
 function refreshSchoolList(callback){
+    $('#addNew').hide();
     clearSchoolList();
         $.ajax({
             url:'/find/school',
@@ -60,6 +107,7 @@ function refreshSchoolList(callback){
                     refreshEditSchoolPlace(school.school, school.place);
                 });
                 SweetAlert.init();
+                $('#addNew').show();
                 $('#schoolsTable').DataTable();
                 callback();
             }
@@ -73,19 +121,14 @@ function addSchoolToSchoolList(school, place){
         schoolStatusInfo = 'success'
     }
     var schoolPlace = '';
-    if(place.country == place.state){
-        if(place.state == place.city){
-            schoolPlace = place.country;
-        }
-        else{
-            schoolPlace = ''+place.country+' /'+place.city;
-        }
+    if(place.country){
+        schoolPlace = schoolPlace + place.country
     }
-    else if(place.state == place.city){
-        schoolPlace = ''+place.country+' /'+place.state;
+    if(place.state){
+        schoolPlace = schoolPlace +' / '+ place.state
     }
-    else{
-        schoolPlace = ''+place.country+' /'+place.state+' /'+place.city;
+    if(place.city){
+        schoolPlace = schoolPlace +' / '+ place.city
     }
     newLine =
     '<tr class="odd gradeX"> <td> <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline"> <input type="checkbox" class="checkboxes" value="1" /> <span></span> </label> </td> <td> '+school.name+' </td> <td> <a href="mailto:'+school.email+'"> '+school.email+' </a> </td> <td> <span class="label label-sm label-'+schoolStatusInfo+'"> '+schoolStatus+' </span> </td> <td class="center"> '+schoolPlace+' </td> <td> <div class="btn-group"> <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions <i class="fa fa-angle-down"></i> </button> <ul class="dropdown-menu pull-left" role="menu"> <li> <a id="editSchoolShowButton'+school.id+'" data-toggle="modal" href="#schoolModal'+school.id+'"> <i class="icon-user"></i> Edit </a> </li> <li><a id="removeSchool'+school.id+'" class="">Remove School</a></li><li><a id="changeStatus'+school.id+'">Change Status</a></li> </ul> </div> </td> </tr>'
@@ -162,8 +205,7 @@ function addSchoolToSchoolList(school, place){
                     method:'DELETE',
                     success: (data)=>{
                         if(data.status=='1'){
-                            debugger;
-                            refreshSchoolList(()=>{});
+                            $('#refreshListsButton').trigger('click');
                         }
                     }
                 }).fail((data)=>{
@@ -171,7 +213,6 @@ function addSchoolToSchoolList(school, place){
                 })
               }
               else{
-                  console.log('nothing happend.');
               }
           });
         currentSchoolId = school.id;
@@ -208,7 +249,7 @@ function addSchoolToSchoolList(school, place){
             $('#editDiscount'+school.id).prop('disabled', 'disabled');
         }
     })
-    $('#editSchoolButton'+school.id).on('click', function(){
+    $('#editSchoolButton'+school.id).unbind().on('click', function(){
         var l = Ladda.create(this);
         l.start();
         var checks = [0,0,0,0];
@@ -225,14 +266,23 @@ function addSchoolToSchoolList(school, place){
             checks[3]=1;
         }
         editSchoolCheckEmptyBoxes(school.id, checks, l, (CreateSchoolExtras, l)=>{
-            console.log('/find/school?id='+school.id+'&url='+$('#editURL'+school.id).val()+'&name='+$('#editName'+school.id).val()+'&email='+$('#editEmail'+school.id).val()+'&country='+$('#editCountry'+school.id).val()+'&state='+$('#editState'+school.id).val()+'&city='+$('#editCity'+school.id).val()+'&description='+$('#editDescription'+school.id).val()+'&adress='+$('#editAdress'+school.id).val()+'&phone='+$('.editPhone'+school.id).val()+CreateSchoolExtras);
+            var patchPlace =''
+            if($('#editCountry'+school.id).val() != null){
+                patchPlace = patchPlace + '&countryId='+$('#editCountry'+school.id).val();
+            }
+            if($('#editState'+school.id).val() != null){
+                patchPlace = patchPlace + '&stateId='+$('#editState'+school.id).val();
+            }
+            if($('#editCity'+school.id).val() != null){
+                patchPlace = patchPlace + '&cityId='+$('#editCity'+school.id).val();
+            }
             $.ajax({
-                url:'/find/school?id='+school.id+'&url='+$('#editURL'+school.id).val()+'&name='+$('#editName'+school.id).val()+'&email='+$('#editEmail'+school.id).val()+'&country='+$('#editCountry'+school.id).val()+'&state='+$('#editState'+school.id).val()+'&city='+$('#editCity'+school.id).val()+'&description='+$('#editDescription'+school.id).val()+'&adress='+$('#editAdress'+school.id).val()+'&phone='+$('.editPhone'+school.id).val()+CreateSchoolExtras,
+                url:'/find/school?id='+school.id+'&url='+$('#editURL'+school.id).val()+'&name='+$('#editName'+school.id).val()+'&email='+$('#editEmail'+school.id).val()+patchPlace+'&description='+$('#editDescription'+school.id).val()+'&adress='+$('#editAdress'+school.id).val()+'&phone='+$('.editPhone'+school.id).val()+CreateSchoolExtras,
                 method:'PATCH',
                 success:(data)=>{
                     l.stop();
                     $('.close').trigger('click');
-                    refreshSchoolList(()=>{});
+                    $('#refreshListsButton').trigger('click');
                 }
             })
         });
@@ -263,23 +313,13 @@ function newSchoolCheckEmptyBoxes(checks, l, callback){
         l.stop();
         return false;
     }
-    if($('#addCountry').val() ==''){
+    if($('#addCountry').text() ==''){
         $('.addCountryBox').addClass('has-error');
         l.stop();
         return false;
     }
     if($('.addPhone').val() ==''){
         $('.addPhoneBox').addClass('has-error');
-        l.stop();
-        return false;
-    }
-    if($('#addState option:selected').val() ==undefined){
-        $('.addStateBox').addClass('has-error');
-        l.stop();
-        return false;
-    }
-    if($('#addCity option:selected').val() ==undefined){
-        $('.addCityBox').addClass('has-error');
         l.stop();
         return false;
     }
@@ -354,23 +394,13 @@ function editSchoolCheckEmptyBoxes(id, checks, l, callback){
         l.stop();
         return false;
     }
-    if($('#editCountry'+id).val() ==''){
+    if($('#editCountry'+id).text() ==''){
         $('.editCountryBox'+id).addClass('has-error');
         l.stop();
         return false;
     }
     if($('.editPhone'+id).val() ==''){
         $('.editPhoneBox'+id).addClass('has-error');
-        l.stop();
-        return false;
-    }
-    if($('#editState'+id+' option:selected').val() ==undefined){
-        $('.editStateBox'+id).addClass('has-error');
-        l.stop();
-        return false;
-    }
-    if($('#editCity'+id+' option:selected').val() ==undefined){
-        $('.editCityBox'+id).addClass('has-error');
         l.stop();
         return false;
     }
@@ -433,37 +463,35 @@ function refreshNewSchoolCountries(){
         success: (countries)=>{
             countries.forEach(country => {
                 newElement = 
-                '<option>'+country.country+'</option>'
+                '<option value="'+country.id+'">'+country.country+'</option>'
                 $('#addCountry').append(newElement);
                 if(country == countries[countries.length-1]){
                     $.ajax({
-                        url:'/find/state?country='+$('#addCountry').val(),
+                        url:'/find/state?countryId='+$('#addCountry').val(),
                         method:'GET',
                         success: (states)=>{
                             if(states != []){
                                 states.forEach(state => {
                                     newElement = 
-                                    '<option>'+state.state+'</option>'
+                                    '<option value="'+state.id+'">'+state.state+'</option>'
                                     $('#addState').append(newElement);
                                     if(state == states[states.length-1]){
                                         $('#addState').removeAttr('disabled');
                                         $.ajax({
-                                            url:'/find/city?state='+$('#addState').val(),
+                                            url:'/find/city?stateId='+$('#addState').val(),
                                             method:'GET',
                                             success: (citys)=>{
                                                 if(citys != []){
                                                     citys.forEach(city => {
                                                         newElement = 
-                                                        '<option>'+city.city+'</option>'
+                                                        '<option value="'+city.id+'">'+city.city+'</option>'
                                                         $('#addCity').append(newElement);
                                                         if(city == citys[citys.length-1]){
-                                                            console.log('citys end');
                                                             $('#addCity').removeAttr('disabled');
                                                         }
                                                     });
                                                 }
                                                 else{
-                                                    console.log('boş');
                                                     $('#addState').attr('disabled', 'disabled');
                                                 }
                                             }
@@ -474,7 +502,6 @@ function refreshNewSchoolCountries(){
                                 });
                             }
                             else{
-                                console.log('boş');
                                 $('#addState').attr('disabled', 'disabled');
                             }
                         }
@@ -489,10 +516,10 @@ function refreshNewSchoolCountries(){
     });
 }
 function refreshEditSchoolPlace(school, place){
-        console.log('refresEditSchoolPlace For School: '+school.id);
         $('#editCountry'+school.id+' option').remove();
         $('#editState'+school.id+' option').remove();
         $('#editCity'+school.id+' option').remove();
+        var t = 1;
         const promise = new Promise((resolve,reject)=>{
             $.ajax({
                 url:'/find/country',
@@ -500,45 +527,66 @@ function refreshEditSchoolPlace(school, place){
                 success: (countries)=>{
                     countries.forEach(country => {
                         newElement = 
-                        '<option>'+country.country+'</option>'
+                        '<option value="'+country.id+'">'+country.country+'</option>'
                         $('#editCountry'+school.id+'').append(newElement);
-                        resolve(school, place);
+                        if(country == countries[countries.length-1]){
+                            resolve(school, place);
+                        }
                     });
                 }
             }).fail((data)=>{
                 console.log('fail: '+data);
             });
         }).then(()=>{
-            $('#editCountry'+school.id).val(place.country);
+            $('#editCity'+school.id+' option').remove();
+            $('#editCountry'+school.id).val(place.countryId);
             $.ajax({
-                url:'/find/state?country='+place.country,
+                url:'/find/state?countryId='+place.countryId,
                 method:'GET',
                 success: (states)=>{
-                    console.log('states::::::', states);
-                    states.forEach(state => {
-                        console.log(state);
+                    if(states.length != 0){
+                        states.forEach(state => {
                         newElement = 
-                        '<option>'+state.state+'</option>'
+                        '<option value="'+state.id+'">'+state.state+'</option>'
                         $('#editState'+school.id+'').append(newElement);
-                        return ('then1 completed');
+                        if(state == states[states.length-1]){
+                            return ('then1 completed');
+                        }
                     });
-                }
-            });
-        }).then(()=>{
-            console.log('place.state:'+place.state);
-            $('#editState'+school.id).val(place.state);
+                    }
+                    else{
+                        $('.editStateBox'+school.id).hide();
                         $.ajax({
-                            url:'/find/city?state='+place.state,
+                            url:'/find/city?countryId='+place.countryId,
                             method:'GET',
                             success: (citys)=>{
                                 citys.forEach(city => {
                                     newElement = 
-                                    '<option>'+city.city+'</option>'
+                                    '<option value="'+city.id+'">'+city.city+'</option>'
                                     $('#editCity'+school.id+'').append(newElement);
                                 });
-                                $('#editCity'+school.id).val(place.city);
+                                $('#editCity'+school.id).val(place.cityId);
                             }
                         })
+                    }
+                }
+            });
+        }).then(()=>{
+            if(place.state){
+                $('#editState'+school.id).val(place.stateId);
+                        $.ajax({
+                            url:'/find/city?stateId='+place.stateId,
+                            method:'GET',
+                            success: (citys)=>{
+                                citys.forEach(city => {
+                                    newElement = 
+                                    '<option value="'+city.id+'">'+city.city+'</option>'
+                                    $('#editCity'+school.id+'').append(newElement);
+                                });
+                                $('#editCity'+school.id).val(place.cityId);
+                            }
+                        })
+            }
         })
 
 }
@@ -547,16 +595,40 @@ function refreshNewSchoolStates(){
     $('#addCity').attr('disabled', 'disabled');
     $('#addCity option').remove();
     $.ajax({
-        url:'/find/state?country='+$('#addCountry').val(),
+        url:'/find/state?countryId='+$('#addCountry').val(),
         method:'GET',
         success: (states)=>{
-            console.log(states);
-            states.forEach(state => {
-                newElement = 
-                '<option>'+state.state+'</option>'
-                $('#addState').append(newElement);
+            if(states.length !=0){
+                states.forEach(state => {
+                    newElement = 
+                    '<option value="'+state.id+'">'+state.state+'</option>'
+                    $('#addState').append(newElement);
+                });
                 $('#addState').removeAttr('disabled');
-            });
+                $('.addStateBox').show();
+                $('#addState').trigger('change');
+            }
+            else{
+                $('.addStateBox').hide();
+                $.ajax({
+                    url:'/find/city?countryId='+$('#addCountry').val(),
+                    method:'GET',
+                    success: (citys)=>{
+                        if(citys.length !=0){
+                            citys.forEach(city => {
+                                newElement = 
+                                '<option value="'+city.id+'">'+city.city+'</option>'
+                                $('#addCity').append(newElement);
+                            });
+                            $('#addCity').removeAttr('disabled');
+                            $('.addCityBox').show();
+                        }
+                        else{
+                            $('.addCityBox').hide();
+                        }
+                    }
+                })
+            }
         }
     }).fail((data)=>{
         console.log('fail: '+data);
@@ -567,22 +639,40 @@ function refreshEditSchoolStates(id){
     $('#editCity'+id).attr('disabled', 'disabled');
     $('#editCity'+id+' option').remove();
     $.ajax({
-        url:'/find/state?country='+$('#editCountry'+id).val(),
+        url:'/find/state?countryId='+$('#editCountry'+id).val(),
         method:'GET',
         success: (states)=>{
-            if(states != []){
-                console.log('states>',states);
+            if(states.length != 0){
+                $('.editStateBox'+id+'').show();
                 states.forEach(state => {
                     newElement = 
-                    '<option>'+state.state+'</option>'
+                    '<option value="'+state.id+'">'+state.state+'</option>'
                     $('#editState'+id).append(newElement);
                     $('#editState'+id).removeAttr('disabled');
-                    console.log('dolu')
                 });
+                $('#editState'+id+'').trigger('change');
             }
             else{
-                console.log('boş');
+                $('.editStateBox'+id+'').hide();
                 $('#editState'+id).attr('disabled', 'disabled');
+                $.ajax({
+                    url:'/find/city?countryId='+$('#editCountry'+id).val(),
+                    method:'GET',
+                    success: (citys)=>{
+                        if(citys.length !=0){
+                            citys.forEach(city => {
+                                newElement = 
+                                '<option value="'+city.id+'">'+city.city+'</option>'
+                                $('#editCity'+id).append(newElement);
+                            });
+                            $('#editCity'+id).removeAttr('disabled');
+                            $('.editCityBox'+id).show();
+                        }
+                        else{
+                            $('.editCityBox'+id).hide();
+                        }
+                    }
+                })
             }
         }
     }).fail((data)=>{
@@ -592,16 +682,16 @@ function refreshEditSchoolStates(id){
 function refreshNewSchoolCitys(){
     $('#addCity option').remove();
     $.ajax({
-        url:'/find/city?state='+$('#addState').val(),
+        url:'/find/city?stateId='+$('#addState').val(),
         method:'GET',
         success: (citys)=>{
-            console.log(citys);
             citys.forEach(city => {
                 newElement = 
-                '<option>'+city.city+'</option>'
+                '<option value="'+city.id+'">'+city.city+'</option>'
                 $('#addCity').append(newElement);
-                $('#addCity').removeAttr('disabled');
             });
+            $('#addCity').removeAttr('disabled');
+            $('.addCityBox').show();
         }
     }).fail((data)=>{
         console.log('fail: '+data);
@@ -610,14 +700,13 @@ function refreshNewSchoolCitys(){
 function refreshEditSchoolCitys(id){
     $('#editCity'+id+' option').remove();
     $.ajax({
-        url:'/find/city?state='+$('#editState'+id).val(),
+        url:'/find/city?stateId='+$('#editState'+id).val(),
         method:'GET',
         success: (citys)=>{
             if(citys != []){
-                console.log(citys);
                 citys.forEach(city => {
                     newElement = 
-                    '<option>'+city.city+'</option>'
+                    '<option value="'+city.id+'">'+city.city+'</option>'
                     $('#editCity'+id).append(newElement);
                     $('#editCity'+id).removeAttr('disabled');
                 });
@@ -626,4 +715,28 @@ function refreshEditSchoolCitys(id){
     }).fail((data)=>{
         console.log('fail: '+data);
     });
+}
+function clearNewSchool(){
+    $('#addName').val('');
+    $('#addURL').val('');
+    $('#addEmail').val('');
+    $('.addPhone').val('');
+    $('#addAdress').val('');
+    $('#addDescription').val('');
+    $('#addAirport').val('');
+    $('#addAccommodation').val('');
+    $('#addHInsurance').val('');
+    $('#addDiscount').val('');
+    if($('.bootstrap-switch-id-airportCheck').hasClass('bootstrap-switch-off')){
+        $('#airportCheck').trigger('click');
+    }
+    if($('.bootstrap-switch-id-accommodationCheck').hasClass('bootstrap-switch-off')){
+        $('#accommodationCheck').trigger('click');
+    }
+    if($('.bootstrap-switch-id-hInsuranceCheck').hasClass('bootstrap-switch-off')){
+        $('#hInsuranceCheck').trigger('click');
+    }
+    if($('.bootstrap-switch-id-discountCheck').hasClass('bootstrap-switch-off')){
+        $('#discountCheck').trigger('click');
+    }
 }

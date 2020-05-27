@@ -339,7 +339,7 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                   .row
                     .col-md-6
                       .btn-group
-                        a.btn.purple.btn-outline.sbold(data-toggle='modal' href='#large')
+                        a#addNew.btn.purple.btn-outline.sbold(data-toggle='modal' href='#large')
                           | Add New
                         button#refreshListsButton.btn.yellow.ladda-button(data-style="zoom-in" style='margin-left:10px;')
                           span.ladda-label Refresh
@@ -420,10 +420,14 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                                     span.input-group-addon
                                       i.fa.fa-usd
                                     input#addDiscount.form-control.addDiscountBox(type='number' placeholder='Discount Price ($$ USD)')
-                                .col-md-12
-                                  form#imgDropzone.dropzone.dropzone-file-area(action='/find/logo', enctype="multipart/form-data", style='width: 500px; margin-top: 50px;')
-                                    h3.sbold Drop files here or click to upload
-                                    p  This is just a demo dropzone. Selected files are not actually uploaded. 
+                                .col-md-4
+                                  form#logoDropzone.dropzone.dropzone-file-area(action='/find/logo', enctype="multipart/form-data", style='width: 100%; margin-top: 50px;')
+                                    h3.sbold Logo
+                                    | (Drag or Click)
+                                .col-md-8
+                                  form#schoolImagesDropzone.dropzone.dropzone-file-area(action='/find/image', enctype="multipart/form-data", style='width: 100%; margin-top: 50px;')
+                                    h3.sbold School's Images
+                                    | (Drag or Click)
                             .clearfix
 
                           .modal-footer

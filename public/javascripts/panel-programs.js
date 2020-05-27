@@ -1,9 +1,10 @@
 $(document).ready(function(){
     $('#refreshListsButton').on('click', function(){
-        $('#addNew').attr('disabled', 'disabled');
+        $('#addNew').hide();
         var l = Ladda.create(this);
         l.start();
         refreshNewOptions(refreshProgramList(()=>{
+            $('#addNew').show();
             $('#addNew').removeAttr('disabled');
             l.stop();
         }));
@@ -240,7 +241,7 @@ function addProgramToProgramList(program, stats){
                     method:'DELETE',
                     success: (data)=>{
                         if(data.status=='1'){
-                            refreshProgramList(()=>{});
+                            $('#refreshListsButton').trigger('click');
                         }
                     }
                 }).fail((data)=>{
