@@ -11,11 +11,11 @@ router.use(busboy());
 //Models
 const School = require('../models/School');
 const SchoolLogo = require('../models/schoolLogo');
-const SchoolImage = require('../models/SchoolImage');
-const SchoolProgram = require('../models/SchoolProgram');
-const SchoolCountry = require('../models/SchoolCountry');
-const SchoolState = require('../models/SchoolState');
-const SchoolCity = require('../models/SchoolCity');
+const SchoolImage = require('../models/schoolImage');
+const SchoolProgram = require('../models/schoolProgram');
+const SchoolCountry = require('../models/schoolCountry');
+const SchoolState = require('../models/schoolState');
+const SchoolCity = require('../models/schoolCity');
 const Logo = require('../models/Logo');
 const Image = require('../models/Image');
 //const SchoolLanguage = require('../models/SchoolLanguage');
