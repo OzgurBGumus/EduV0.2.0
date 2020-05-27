@@ -12,14 +12,14 @@ router.use(busboy());
 const School = require('../models/School');
 const SchoolLogo = require('../models/SchoolLogo');
 const SchoolImage = require('../models/SchoolImage');
+const SchoolProgram = require('../models/SchoolProgram');
 const SchoolCountry = require('../models/SchoolCountry');
 const SchoolState = require('../models/SchoolState');
 const SchoolCity = require('../models/SchoolCity');
 const Logo = require('../models/Logo');
 const Image = require('../models/Image');
 //const SchoolLanguage = require('../models/SchoolLanguage');
-//const SchoolReservation = require('../models/SchoolReservation');
-const SchoolProgram = require('../models/SchoolProgram');
+//const SchoolReservation = require('../models/SchoolReservation')
 const Program = require('../models/Program');
 const ProgramLanguage = require('../models/ProgramLanguage');
 const ProgramTime = require('../models/ProgramTime');
