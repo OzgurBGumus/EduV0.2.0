@@ -94,7 +94,7 @@ function refreshTimeList(callback){
                 newElement = 
                 '<option value="'+time.id+'">'+time.time+'</option>'
                 $('#addTime').append(newElement);
-                if(time == times[times.length-1]){
+                if(time == times[times.length-1]){;
                     callback;
                 }
             });
@@ -171,10 +171,12 @@ function checkNewProgramBoxes(checks, l, callback){
 }
 function refreshProgramList(callback){
     clearProgramList();
+    console.log('here?');
         $.ajax({
             url:'/find/program',
             method: 'GET',
             success: (programs)=>{
+                console.log(programs);
                 programs.forEach(program => {
                     addProgramToProgramList(program.program, program.stats);
                     //refreshEditProgramPlace(program.program, program.stats);

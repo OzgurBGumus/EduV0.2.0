@@ -235,8 +235,10 @@ router.get('/find/image', function(req,res,next){
 router.get('/find/school', function(req,res,next){
   var q = req.query;
   if(q.schoolId){
-    School.findOne({'schoolId':q.schoolId}, (err,data)=>{
-      res.send(data);
+    School.find({'schoolId':q.schoolId}, (err,data)=>{
+      var sendable = [];
+      var i = 0;
+      showSchools(data, sendable, i, res);
     });
   }
   else if(q.schoolHttp){
@@ -364,6 +366,8 @@ function showSchools(data, sendable, i, res){
     schools = data;
     var element = data[i];
     var place = {};
+    var images = {};
+    images.schoolImage=[];
     SchoolCountry.findOne({schoolId:element.id}, (err,data)=>{
       Country.findOne({id:data.countryId}, (err,data)=>{
         place.country = data.country;
@@ -377,16 +381,33 @@ function showSchools(data, sendable, i, res){
                 City.findOne({id:data.cityId}, (err,data)=>{
                   place.city = data.city;
                   place.cityId = data.id;
-                  school = schools[i];
-                  var obj = {school, place};
-                  sendable.push(obj);
-                  if(i==schools.length-1){
-                    //console.log('===========>', sendable);
-                    res.send(sendable);
-                  }
-                  else{
-                    showSchools(schools, sendable, i+1, res);
-                  }
+                  SchoolLogo.findOne({schoolId:element.id}, (err,data)=>{
+                    Logo.findOne({id:data.logoId}, (err, logo)=>{
+                      images.logo = logo.name;
+                      images.logoId = logo.id;
+                      SchoolImage.find({schoolId:element.id}, (err,data)=>{
+                        idArray = [];
+                        data.forEach(element => {
+                          idArray.push(element.imageId);
+                          if(element == data[data.length-1]){
+                            Image.find({id:{$in:idArray}}, (err,data)=>{
+                              images.schoolImage=data;
+                              school = schools[i];
+                              var obj = {school, place, images};
+                              sendable.push(obj);
+                              if(i==schools.length-1){
+                                //console.log('===========>', sendable);
+                                res.send(sendable);
+                              }
+                              else{
+                                showSchools(schools, sendable, i+1, res);
+                              }
+                            })
+                          }
+                        });
+                      })
+                    })
+                  })
                 });
               });
             });
@@ -396,16 +417,33 @@ function showSchools(data, sendable, i, res){
               City.findOne({id:data.cityId}, (err,data)=>{
                 place.city = data.city;
                 place.cityId = data.id;
-                school = schools[i];
-                var obj = {school, place};
-                sendable.push(obj);
-                if(i==schools.length-1){
-                  //console.log('===========>', sendable);
-                  res.send(sendable);
-                }
-                else{
-                  showSchools(schools, sendable, i+1, res);
-                }
+                SchoolLogo.findOne({schoolId:element.id}, (err,data)=>{
+                  Logo.findOne({id:data.logoId}, (err, logo)=>{
+                    images.logo = logo.name;
+                    images.logoId = logo.id;
+                    SchoolImage.find({schoolId:element.id}, (err,data)=>{
+                      idArray = [];
+                      data.forEach(element => {
+                        idArray.push(element.imageId);
+                        if(element == data[data.length-1]){
+                          Image.find({id:{$in:idArray}}, (err,data)=>{
+                            images.schoolImage=data;
+                            school = schools[i];
+                            var obj = {school, place, images};
+                            sendable.push(obj);
+                            if(i==schools.length-1){
+                              //console.log('===========>', sendable);
+                              res.send(sendable);
+                            }
+                            else{
+                              showSchools(schools, sendable, i+1, res);
+                            }
+                          })
+                        }
+                      });
+                    })
+                  })
+                })
               });
             });
           }
@@ -953,47 +991,88 @@ router.put('/find/time', function(req,res,next){
   });
 });
 router.post('/find/logo', function(req,res,next){
-    var fstream;
-    req.pipe(req.busboy);
-    req.busboy.on('file', function (fieldname, file, filename) {
-    findNewId(Logo, (newId)=>{
-      console.log("Uploading: " + filename);
-      var path = require('path');
-      var newName =req.query.schoolId+'_'+newId+path.extname(filename);
-      console.log('Images New Name: '+newName);
-      fstream = fs.createWriteStream(__dirname+'/../public/images/logos/'+ newName);
-      file.pipe(fstream);
-      fstream.on('close', function(){
-        const logo = new Logo({
-          id: newId,
-          name: newName,
-          });
-        logo.save((err, data)=>{
-          if (err){
-            console.log(err);
-          }
-          else{
-            const schoolLogo = new SchoolLogo({
-              schoolId: req.query.schoolId,
-              logoId: newId
-            })
-            schoolLogo.save((err,data)=>{
-              if(err){
+  SchoolLogo.findOne({schoolId:req.query.schoolId}, (err,data)=>{
+    console.log('////////////find/logoSchoolLogo.findOne{schoolId:req.query.schoolId}, (err,data)', data);
+    if(err){
+      res.send(err);
+    }
+    else if(!data){
+      var fstream;
+      req.pipe(req.busboy);
+      req.busboy.on('file', function (fieldname, file, filename) {
+        findNewId(Logo, (newId)=>{
+          console.log("Uploading: " + filename);
+          var path = require('path');
+          var newName =req.query.schoolId+'_'+newId+path.extname(filename);
+          console.log('Images New Name: '+newName);
+          fstream = fs.createWriteStream(__dirname+'/../public/images/logos/'+ newName);
+          file.pipe(fstream);
+          fstream.on('close', function(){
+            const logo = new Logo({
+              id: newId,
+              name: newName,
+              type: path.extname(filename),
+              });
+            logo.save((err, data)=>{
+              if (err){
                 console.log(err);
               }
               else{
-                console.log('schoolLogo Created...');
-                res.send(data);
+                const schoolLogo = new SchoolLogo({
+                  schoolId: req.query.schoolId,
+                  logoId: newId
+                })
+                schoolLogo.save((err,data)=>{
+                  if(err){
+                    console.log(err);
+                  }
+                  else{
+                    console.log('schoolLogo Created...');
+                    res.send(data);
+                  }
+                })
+              }
+            });
+          })
+        });
+      });
+    }
+    else if(data){
+        Logo.findOne({id:data.logoId}, (err, logo)=>{
+          if(err){
+            console.log(err);
+          }
+          else{
+            const imagePath = __dirname+'/../public/images/logos/'+req.query.schoolId+'_'+logo.id+logo.type;
+            fs.unlink(imagePath, function(err) {
+              if (err) {
+                throw err
+              }
+              else {
+                var fstream;
+                req.pipe(req.busboy);
+                req.busboy.on('file', function (fieldname, file, filename) {
+                  console.log("Uploading: " + filename);
+                  var path = require('path');
+                  var newName =req.query.schoolId+'_'+logo.id+path.extname(filename);
+                  console.log('Images New Name: '+newName);
+                  fstream = fs.createWriteStream(__dirname+'/../public/images/logos/'+ newName);
+                  file.pipe(fstream);
+                  fstream.on('close', function(){
+                    Logo.findOneAndUpdate({id:logo.id}, {type:path.extname(filename)}, function(err, doc){
+                      res.send({id:logo.id, schoolId:req.query.schoolId, type:path.extname(filename)});
+                    })
+                  })
+                })
               }
             })
           }
-        });
-      })
-    });
-  });
-});
+        })
+      }
+   });
+})
 router.post('/find/image', function(req,res,next){
-  var fstream;
+    var fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename) {
     findNewId(Image, (newId)=>{
@@ -1007,6 +1086,7 @@ router.post('/find/image', function(req,res,next){
         const image = new Image({
           id: newId,
           name: newName,
+          type: path.extname(filename)
           });
         image.save((err, data)=>{
           if (err){
@@ -1022,7 +1102,7 @@ router.post('/find/image', function(req,res,next){
                 console.log(err);
               }
               else{
-                res.send(data);
+                res.send({id:newId, schoolId:req.query.schoolId, type:path.extname(filename)});
               }
             })
           }
@@ -1441,7 +1521,6 @@ router.delete('/state/delete', function(req,res,next){
     })
   })
 });
-
 router.delete('/country/delete', function(req,res,next){
   var id=req.query.id;
   var promise = new Promise((resolve, reject)=>{
@@ -1554,17 +1633,41 @@ router.delete('/school/delete', function(req,res,next){
   School.findOneAndDelete({id}, (data)=>{
     if(!data){
       console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-      SchoolCity.findOneAndRemove({schoolId:id}, (data)=>{
+      SchoolCity.findOneAndDelete({schoolId:id}, (data)=>{
         if(!data){
           console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-          SchoolState.findOneAndRemove({schoolId:id}, (data)=>{
+          SchoolState.findOneAndDelete({schoolId:id}, (data)=>{
             if(!data){
               console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-              SchoolCountry.findOneAndRemove({schoolId:id}, (data)=>{
+              SchoolCountry.findOneAndDelete({schoolId:id}, (data)=>{
                 if(!data){
                   console.log('///////////////////////////////////////////////// DELETED::(ID)::' + req.query.id);
-                  console.log('last');
-                  res.send({status:'1'});
+                  SchoolProgram.find({schoolId:id}, (err, programs)=>{
+                    if(programs == []){
+                      console.log('if');
+                      programs.forEach(program => {
+                        SchoolProgram.findOneAndDelete({programId:program.id}, (err, data)=>{
+                          removeProgram(program, ()=>{
+                            if(program == programs[programs.length-1]){
+                              removeSchoolImages(id, ()=>{
+                                removeSchoolLogo(id, ()=>{
+                                  res.send({status:'1'});
+                                });
+                              });
+                            }
+                          })
+                        });
+                      });
+                    }
+                    else{
+                      console.log('else');
+                      removeSchoolImages(id, ()=>{
+                        removeSchoolLogo(id, ()=>{
+                          res.send({status:'1'});
+                        });
+                      });
+                    }
+                  })
                 }
                 else{
                   console.log('///////////////////////////////////////////////////////[SchoolCountry findOneAndRemove]  Data is not Found: '+ req.query.id);
@@ -1590,6 +1693,36 @@ router.delete('/school/delete', function(req,res,next){
     }
   });
 });
+router.delete('/image/delete', function(req,res,next){
+  var schoolId = req.query.schoolId;
+  var id = req.query.id;
+  var type = req.query.type;
+  var promise = new Promise((resolve, reject)=>{
+    SchoolImage.findOneAndDelete({'schoolId':schoolId, 'imageId':id}, (err, schoolimage)=>{
+      console.log('SchoolImage is Deleted.');
+      resolve('SchoolImage is Deleted.');
+    });
+  })
+  promise.then(()=>{
+    Image.findOneAndDelete({'id':id}, (err,data)=>{
+      if(err){
+        console.log(err);
+      }
+      else{
+        const imagePath = __dirname+'/../public/images/schoolImages/'+schoolId+'_'+id+type;
+        fs.unlink(imagePath, function(err) {
+          if (err) {
+            throw err
+          }
+          else {
+            console.log('Image is Deleted.');
+            res.send('Image is Deleted.')
+          }
+        })
+      }
+    })
+  })
+})
 
 
 router.get('/findSchool/id', function(req,res,next){
@@ -2022,5 +2155,63 @@ function findNewId(place, callback){
     callback(newId);
   });
 }
-
+function removeProgram(programId, callback){
+  Program.findOneAndDelete({id:programId}, (err, data)=>{
+    ProgramLanguage.findOneAndDelete({programId:programId}, (err, data)=>{
+      ProgramTime.findOneAndDelete({programId:programId}, (err, data)=>{
+        callback();
+      })
+    })
+  })
+}
+function removeSchoolImages(schoolId, callback){
+  SchoolImage.find({'schoolId':schoolId}, (err, schoolImages)=>{
+    schoolImages.forEach(schoolImage => {
+      SchoolImage.findOneAndDelete({schoolId:schoolId, imageId:schoolImage.imageId}, (err, schoolimage)=>{
+        console.log('SchoolImage is Deleted.');
+        Image.findOne({id:schoolImage.imageId}, (err,currentImage)=>{
+          Image.findOneAndDelete({id:currentImage.id}, (err, data)=>{
+            const imagePath = __dirname+'/../public/images/schoolImages/'+schoolId+'_'+currentImage.id+currentImage.type;
+            fs.unlink(imagePath, function(err) {
+              if (err) {
+                throw err
+              }
+              else {
+                console.log('Image is Deleted.');
+                if(schoolImage == schoolImages[schoolImages.length-1]){
+                  callback();
+                }
+              }
+            })
+          })
+        });
+        })
+    });
+  })
+}
+function removeSchoolLogo(schoolId, callback){
+  SchoolLogo.find({schoolId:schoolId}, (err, schoolLogos)=>{
+    schoolLogos.forEach(schoolLogo => {
+      SchoolLogo.findOneAndDelete({schoolId:schoolId, logoId:schoolLogo.logoId}, (err, schoollogo)=>{
+        console.log('SchoolLogo is Deleted.');
+        Logo.findOne({id:schoolLogo.logoId}, (err, currentLogo)=>{
+          Logo.findOneAndDelete({id:currentLogo.id}, (err, data)=>{
+            const imagePath = __dirname+'/../public/images/logos/'+schoolId+'_'+currentLogo.id+currentLogo.type;
+            fs.unlink(imagePath, function(err) {
+              if (err) {
+                throw err
+              }
+              else {
+                console.log('Logo is Deleted.');
+                if(schoolLogo == schoolLogos[schoolLogos.length-1]){
+                  callback();
+                }
+              }
+            })
+          })
+        })
+      });
+    });
+  })
+}
 module.exports = router;
