@@ -301,12 +301,9 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
           li.nav-item
             a.nav-link(href='/panel/in/languages')
               span.title Languages
-          li.nav-item
+          li.nav-item.disabled
             a.nav-link(href='/panel/in/users')
               span.title Users
-          li.nav-item
-            a.nav-link(href='/panel/in/images')
-              span.title Images
         // END SIDEBAR MENU
         // END SIDEBAR MENU
       // END SIDEBAR
@@ -365,7 +362,6 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                                   label.control-label(for='school') School
                                   .input-group.col-md-12
                                     select#addSchool.form-control
-                                      option(hidden disabled) School...
                                 .form-group
                                 .col-md-2.addWeeksBox
                                   label.control-label(for='weeks') Weeks
@@ -405,8 +401,8 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                                   label.control-label(for='discount' style='margin-top:20px; margin-left:10px') Discount
                                   span.input-group.d-inline-block
                                     span.input-group-addon
-                                      i.fa.fa-usd
-                                    input#addDiscount.form-control(type='number' placeholder='Discount Price ($$ USD)')
+                                      i.fa.fa-chevron-circle-right
+                                    input#addDiscount.form-control(type='number' placeholder='Discount Price (%)')
 
 
                             .clearfix

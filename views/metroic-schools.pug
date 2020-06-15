@@ -297,12 +297,9 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
           li.nav-item
             a.nav-link(href='/panel/in/languages')
               span.title Languages
-          li.nav-item
+          li.nav-item.disabled
             a.nav-link(href='/panel/in/users')
               span.title Users
-          li.nav-item
-            a.nav-link(href='/panel/in/images')
-              span.title Images
         // END SIDEBAR MENU
         // END SIDEBAR MENU
       // END SIDEBAR
@@ -418,8 +415,8 @@ body.page-header-fixed.page-sidebar-closed-hide-logo.page-content-white
                                   label.control-label(for='discount' style='margin-top:20px; margin-left:10px') Discount
                                   .input-group.col-md-12.addDiscountBox
                                     span.input-group-addon
-                                      i.fa.fa-usd
-                                    input#addDiscount.form-control.addDiscountBox(type='number' placeholder='Discount Price ($$ USD)')
+                                      i.fa.fa-chevron-circle-right
+                                    input#addDiscount.form-control.addDiscountBox(type='number' placeholder='Discount Price (%)')
                                 .col-md-4
                                   form#logoDropzone.dropzone.dropzone-file-area(action='/find/logo', enctype="multipart/form-data", style='width: 100%; margin-top: 50px;')
                                     h3.sbold Logo

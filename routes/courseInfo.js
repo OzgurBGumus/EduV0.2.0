@@ -472,15 +472,18 @@ router.get('/find/program', function(req,res,next){
             console.log('programLanguage::::::::::::::::::::::'+data);
             Language.findOne({id:data.languageId}, (err,data)=>{
               stats.language = data.language;
+              stats.languageId = data.id;
               ProgramTime.findOne({programId:element.id}, (err,data)=>{
                 Time.findOne({id:data.timeId}, (err,data)=>{
                   stats.time = data.time;
+                  stats.timeId = data.id;
                   SchoolProgram.findOne({programId:element.id}, (err,data)=>{
-                    School.findOne({id:data.schoolId}, (err,data)=>{
-                      stats.school = data.name;
+                    School.findOne({id:data.schoolId}, (err,school)=>{
+                      stats.school = school.name;
+                      stats.schoolId = school.id;
                       program = programs[i];
                       console.log(program);
-                      var obj = {program, stats};
+                      var obj = {program, stats, school};
                       sendable.push(obj);
                       i++;
                       if(i==programs.length){
@@ -1298,6 +1301,7 @@ router.patch('/find/school', function(req,res,next){
   }
 });
 router.patch('/find/program', function(req,res,next){
+  var q = req.query;
   if(req.query.status){
     var newStatus = false;
     if(req.query.status == 'true'){
@@ -1318,6 +1322,77 @@ router.patch('/find/program', function(req,res,next){
       }
       else{
         res.send('');
+      }
+    })
+  }
+  else{
+    var discount = 0;
+    var sDay ='';
+    var sMonth='';
+    var sYear='';
+    var eDay='';
+    var eMonth='';
+    var eYear='';
+    var Splace=0;
+    var Eplace=0;
+    if(q.discount){
+      discount = q.discount;
+    }
+    for(i=0;i<req.query.start.length;i++){
+      console.log('Splace = '+Splace);
+      if(req.query.start[i] =='/'){
+        Splace++;
+      }
+      else if(Splace == 0){
+        sDay = sDay+req.query.start[i];
+      }
+      else if(Splace == 1){
+        sMonth = sMonth+req.query.start[i];
+      }
+      else if(Splace == 2){
+        sYear = sYear+req.query.start[i];
+      }
+    }
+    console.log(sDay, sMonth, sYear);
+    for(i=0;i<req.query.end.length;i++){
+      console.log('Eplace = '+Eplace);
+      if(req.query.end[i] =='/'){
+        Eplace++;
+      }
+      else if(Eplace == 0){
+        eDay = eDay+req.query.end[i];
+      }
+      else if(Eplace == 1){
+        eMonth = eMonth+req.query.end[i];
+      }
+      else if(Eplace == 2){
+        eYear = eYear+req.query.end[i];
+      }
+    }
+    console.log(eDay, eMonth, eYear);
+    Program.findOneAndUpdate({id:q.id}, {name:q.name, weeks:q.weeks, hours:q.hours, price:q.price, startDateDay:sDay, startDateMonth:sMonth, startDateYear:sYear, endDateDay:eDay, endDateMonth:eMonth, eDateYear:eYear, description:q.description, discount:discount}, (err,program)=>{
+      if(err){
+        throw err;
+      }
+      else{
+        console.log('Program: '+q.id+'----UPDATED');
+        ProgramLanguage.findOneAndUpdate({programId:q.id}, {languageId:q.language}, (err, programlanguage)=>{
+          if(err){
+            throw err;
+          }
+          else{
+            console.log('Program: '+q.id+'----Language Updated To:'+q.language);
+            ProgramTime.findOneAndUpdate({programId:q.id}, {timeId:q.time}, (err,data)=>{
+              if(err){
+                throw err;
+              }
+              else{
+                console.log('Program: '+q.id+'----Time Updated To:'+q.time);
+                res.end('');
+              }
+            })
+          }
+        })
       }
     })
   }
@@ -1693,6 +1768,11 @@ router.delete('/school/delete', function(req,res,next){
     }
   });
 });
+router.delete('/program/delete', function(req,res,next){
+  removeProgram(req.query.id, ()=>{
+    res.send({status:'1'});
+  })
+})
 router.delete('/image/delete', function(req,res,next){
   var schoolId = req.query.schoolId;
   var id = req.query.id;
