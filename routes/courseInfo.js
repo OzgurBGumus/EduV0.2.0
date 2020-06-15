@@ -384,6 +384,7 @@ function showSchools(data, sendable, i, res){
                   SchoolLogo.findOne({schoolId:element.id}, (err,data)=>{
                     Logo.findOne({id:data.logoId}, (err, logo)=>{
                       images.logo = logo.name;
+                      images.logoType = logo.type;
                       images.logoId = logo.id;
                       SchoolImage.find({schoolId:element.id}, (err,data)=>{
                         idArray = [];
@@ -1006,7 +1007,7 @@ router.post('/find/logo', function(req,res,next){
         findNewId(Logo, (newId)=>{
           console.log("Uploading: " + filename);
           var path = require('path');
-          var newName =req.query.schoolId+'_'+newId+path.extname(filename);
+          var newName =req.query.schoolId+'_'+newId;
           console.log('Images New Name: '+newName);
           fstream = fs.createWriteStream(__dirname+'/../public/images/logos/'+ newName);
           file.pipe(fstream);
