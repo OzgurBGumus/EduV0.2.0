@@ -1009,7 +1009,7 @@ router.post('/find/logo', function(req,res,next){
           var path = require('path');
           var newName =req.query.schoolId+'_'+newId;
           console.log('Images New Name: '+newName);
-          fstream = fs.createWriteStream(__dirname+'/../public/images/logos/'+ newName);
+          fstream = fs.createWriteStream(__dirname+'/../public/images/logos/'+ newName+path.extname(filename));
           file.pipe(fstream);
           fstream.on('close', function(){
             const logo = new Logo({
@@ -1060,7 +1060,7 @@ router.post('/find/logo', function(req,res,next){
                   var path = require('path');
                   var newName =req.query.schoolId+'_'+logo.id
                   console.log('Images New Name: '+newName);
-                  fstream = fs.createWriteStream(__dirname+'/../public/images/logos/'+ newName);
+                  fstream = fs.createWriteStream(__dirname+'/../public/images/logos/'+ newName+logo.type);
                   file.pipe(fstream);
                   fstream.on('close', function(){
                     Logo.findOneAndUpdate({id:logo.id}, {type:path.extname(filename)}, function(err, doc){
