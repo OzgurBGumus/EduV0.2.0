@@ -1058,7 +1058,7 @@ router.post('/find/logo', function(req,res,next){
                 req.busboy.on('file', function (fieldname, file, filename) {
                   console.log("Uploading: " + filename);
                   var path = require('path');
-                  var newName =req.query.schoolId+'_'+logo.id+path.extname(filename);
+                  var newName =req.query.schoolId+'_'+logo.id
                   console.log('Images New Name: '+newName);
                   fstream = fs.createWriteStream(__dirname+'/../public/images/logos/'+ newName);
                   file.pipe(fstream);
