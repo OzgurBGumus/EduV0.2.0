@@ -19,6 +19,7 @@ router.get('/login/verify', function(req, res, next) {
       throw err;
     }
     else if(!data){
+      console.log('Authentication Failed.. User not found <<<<<<<<');
       res.json({
         status:false,
         message:'Authentication Failed.. User not found <<<<<<<<'
@@ -27,6 +28,7 @@ router.get('/login/verify', function(req, res, next) {
     else{
       bcrypt.compare(password, data.password).then((result)=>{
         if(!result){
+          console.log('Authentication Failed.. Password is incorrect <<<<<<<<')
           res.json({
             status:false,
             message:'Authentication Failed.. Password is incorrect <<<<<<<<'
@@ -37,7 +39,7 @@ router.get('/login/verify', function(req, res, next) {
             username
           };
           const token = jwt.sign(payload, req.app.get('api_secret_key'), {
-            expiresIn:5*60//5 Minutes
+            expiresIn:10*60//5 Minutes
           });
           User.findOneAndUpdate({username:username},{token:token}, function(err, doc){
             if(err){
@@ -83,7 +85,7 @@ router.get('/in', function(req,res,next){
     }
     else if(!data){
       console.log('!!!!!!!!!!!!!!!!something wrong:: data is not found /in->User.findOne(token)');
-      res.send('data is not found./');
+      res.render('panelLogin', {title:'Panel Login'});
     }
     else{
       const username = data.username;
@@ -106,7 +108,9 @@ router.get('/in/Languages', function(req,res,next){
 });
 router.get('/in/Programs', function(req,res,next){
   res.render('metroic-programs');
+});
+router.get('/in/Logout', function(req,res,next){
+  req.session.token='0';
 })
-
 
   module.exports = router;
